@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Influencer Profile</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .profile-header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+    }
+    .profile-image {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 20px;
+    }
+    .profile-stats {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 600px;
+    }
+    .profile-stats div {
+      text-align: center;
+    }
+    .profile-bio {
+      margin-top: 10px;
+    }
+    .profile-posts {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .profile-post {
+      width: calc(33.333% - 20px);
+      margin: 10px;
+      overflow: hidden;
+    }
+    .profile-post img {
+      width: 100%;
+    }
+    .social-stats {
+      margin-top: 20px;
+    }
+    .social-stats .card {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="profile-header">
+    <div class="profile-image">
+      <img src="https://via.placeholder.com/150" alt="Profile Picture">
+    </div>
+    <div>
+      <h2>Username</h2>
+      <div class="profile-stats">
+        <div>
+          <strong>150</strong><br>
+          Posts
+        </div>
+        <div>
+          <strong>300k</strong><br>
+          Followers
+        </div>
+        <div>
+          <strong>200</strong><br>
+          Following
+        </div>
+      </div>
+      <div class="profile-bio">
+        <p>Bio text goes here. You can include hashtags, links, and other relevant information.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="social-stats row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title">Instagram</h5>
+          <p class="card-text"><strong>Username:</strong> @instagram_user</p>
+          <p class="card-text"><strong>Followers:</strong> 500k</p>
+          <p class="card-text"><strong>Posts:</strong> 300</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title">Twitter</h5>
+          <p class="card-text"><strong>Username:</strong> @twitter_user</p>
+          <p class="card-text"><strong>Followers:</strong> 200k</p>
+          <p class="card-text"><strong>Tweets:</strong> 1,500</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title">YouTube</h5>
+          <p class="card-text"><strong>Channel:</strong> YouTube Channel</p>
+          <p class="card-text"><strong>Subscribers:</strong> 1M</p>
+          <p class="card-text"><strong>Videos:</strong> 100</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-posts">
+    <div class="profile-post">
+      <img src="https://via.placeholder.com/300" alt="Post 1">
+    </div>
+    <div class="profile-post">
+      <img src="https://via.placeholder.com/300" alt="Post 2">
+    </div>
+    <div class="profile-post">
+      <img src="https://via.placeholder.com/300" alt="Post 3">
+    </div>
+    <div class="profile-post">
+      <img src="https://via.placeholder.com/300" alt="Post 4">
+    </div>
+    <div class="profile-post">
+      <img src="https://via.placeholder.com/300" alt="Post 5">
+    </div>
+    <div class="profile-post">
+      <img src="https://via.placeholder.com/300" alt="Post 6">
+    </div>
+    <!-- Add more posts as needed -->
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
