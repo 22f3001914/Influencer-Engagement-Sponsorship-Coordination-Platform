@@ -5,10 +5,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Login - Brand</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
-    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fonts/fontawesome-all.min.css') }}">
+    <style>
+        
+    </style>
 </head>
 
 <body class="bg-gradient-primary">
@@ -20,24 +24,32 @@
                         <div class="row">
                             <div class="col-lg-6 d-none d-lg-flex">
                                 <div class="flex-grow-1 bg-login-image"
-                                    style="background-image: url(&quot;assets/img/dogs/image3.jpeg&quot;);"></div>
+                                style="background-image: url('{{ url_for('static', filename='img/dogs/image3.jpeg') }}');"></div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
                                         <h4 class="text-dark mb-4">Welcome Back Admin!</h4>
                                     </div>
-                                    <form class="user">
+                                    <form class="user" action="/admin/login" method="post">
                                         <div class="mb-3"><input class="form-control form-control-user" type="text"
-                                                id="exampleInputUsername" placeholder="Enter Username..."
+                                                 placeholder="Enter Username..."
                                                 name="username"></div>
                                         <div class="mb-3"><input class="form-control form-control-user" type="password"
-                                                id="exampleInputPassword" placeholder="Password" name="password"></div>
+                                                 placeholder="Password" name="password"></div>
                                         <button class="btn btn-primary d-block btn-user w-100"
                                             type="submit">Login</button>
+                                            <div class="toaster">
+                                                {% with messages = get_flashed_messages() %}
+                                                {% if messages %}
+                                                  {{ messages[-1] }}
+                                                {% endif %}
+                                              {% endwith %}
+                                            </div>
+                                            
                                         <hr>
                                     </form>
-                                    <div class="text-center"><a class="small" href="forgot-password.html">Forgot
+                                    <div class="text-center"><a class="small" href="">Forgot
                                             Password?</a></div>
                                 </div>
                             </div>
@@ -47,9 +59,13 @@
             </div>
         </div>
     </div>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/bs-init.js"></script>
-    <script src="assets/js/theme.js"></script>
+
+
+
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bs-init.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 </body>
 
 </html>

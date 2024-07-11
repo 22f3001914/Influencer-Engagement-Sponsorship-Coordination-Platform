@@ -4,13 +4,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Add Campaigns</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <title>Blank Page - Brand</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
-    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
-    <style>
-        .card-listings {
+    <link rel="stylesheet" href="{{ url_for('static', filename='fonts/fontawesome-all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/News-Cards.css') }}">
+       <style>
+         .card-listings {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
@@ -18,8 +19,7 @@
         }
 
         .campaign-card {
-            max-width: 310px;
-            min-width: 250px;
+            max-width: 400px;
             margin: 20px auto;
             border: 1px solid #ddd;
             border-radius: 10px;
@@ -84,7 +84,6 @@
             color: #555;
         }
     </style>
-        
 </head>
 
 <body id="page-top">
@@ -97,16 +96,16 @@
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link" href="dashboard-sponsor.html"><i
+                    <li class="nav-item"><a class="nav-link" href="index.html"><i
                                 class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="campaigns.html"><i
-                                class="fas fa-bullhorn"></i></i><span>Campaigns</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="find.html"><i
-                                class="fas fa-search"></i><span>Find</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="stats.html"><i
-                                class="fas fa-table"></i><span>Stats</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html"><i
+                                class="fas fa-user"></i><span>Profile</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="table.html"><i
+                                class="fas fa-table"></i><span>Table</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="login.html"><i
-                                class="far fa-user-circle"></i><span>Logout</span></a></li>
+                                class="far fa-user-circle"></i><span>Login</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="register.html"><i
+                                class="fas fa-user-circle"></i><span>Register</span></a></li>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0"
                         id="sidebarToggle" type="button"></button></div>
@@ -254,217 +253,245 @@
 
 
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-1">Add Campaigns</h3>
-                    
-                    <div class="row">
+                    <h3 class="text-dark mb-4">Find Campaigns</h3>
+                        <!-- New Requests -->
 
-                        <div class="col">
-                            <div class="card shadow mb-3 mt-4">
-                                <div class="card-header py-3">
-                                    <p class="text-primary m-0 fw-bold">Add New Campaign</p>
-                                </div>
-                                <div class="card-body">
-                                    <form>
-                                        <div class="mb-3">
-                                            <label class="form-label" for="campaign_name"><strong>Campaign Name</strong></label>
-                                            <input class="form-control" type="text" id="campaign_name" placeholder="Enter campaign name" name="campaign_name">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label" for="campaign_details"><strong>Campaign Details</strong></label>
-                                            <textarea class="form-control" id="campaign_details" placeholder="Enter campaign details" name="campaign_details" rows="3"></textarea>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label" for="campaign_images"><strong>Campaign Images</strong></label>
-                                            <input class="form-control" type="file" id="campaign_images" name="campaign_images" multiple>
-                                            <small class="form-text text-muted">You can select multiple images.</small>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4 mb-3">
-                                                <label class="form-label" for="age_group"><strong>Target Age Group</strong></label>
-                                                <input class="form-control" type="text" id="age_group" placeholder="e.g., 18-24" name="age_group">
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label class="form-label" for="gender"><strong>Target Gender</strong></label>
-                                                <select class="form-select" id="gender" name="gender">
-                                                    <option value="any">Any</option>
-                                                    <option value="male">Male</option>
-                                                    <option value="female">Female</option>
-                                                    <option value="other">Other</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-4 mb-3">
-                                                <label class="form-label" for="campaign_price"><strong>Campaign Price</strong></label>
-                                                <input class="form-control" type="number" id="campaign_price" placeholder="Enter price" name="campaign_price">
-                                            </div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label"><strong>Platforms</strong></label>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="platform_youtube" name="platforms" value="youtube">
-                                                <label class="form-check-label" for="platform_youtube">YouTube</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="platform_instagram" name="platforms" value="instagram">
-                                                <label class="form-check-label" for="platform_instagram">Instagram</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="platform_twitter" name="platforms" value="twitter">
-                                                <label class="form-check-label" for="platform_twitter">Twitter</label>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <button class="btn btn-primary btn-sm" type="submit">Add Campaign</button>
-                                        </div>
-                                    </form>
-                                </div>
+                        <div class="card shadow mb-5">
+                            <div class="card-header py-3">
+                                <p class="text-primary m-0 fw-bold">New Requests</p>
                             </div>
+
+                            <div class="card-listings">
+
+                                <div class="campaign-card card">
+                                    <div class="card-header">
+                                        <div class="company-info">
+                                            <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
+                                            <div>
+                                                <strong>CompanyName</strong><br>
+                                                <small class="text-muted">CampaignName</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="price-tag">$200</div>
+                                        <div class="campaign-details">
+                                            Campaign details go here, describing the campaign, its goals, and any other
+                                            relevant information.
+                                        </div>
+                                        <button class="btn btn-primary request-button">Request</button>
+                                    </div>
+                                </div>
+
+                                
+
+
+                                <div class="campaign-card card">
+                                    <div class="card-header">
+                                        <div class="company-info">
+                                            <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
+                                            <div>
+                                                <strong>CompanyName</strong><br>
+                                                <small class="text-muted">CampaignName</small>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="card-body">
+                                        <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="price-tag">$550</div>
+                                        <div class="campaign-details">
+                                            Campaign details go here, describing the campaign, its goals, and any other
+                                            relevant information.
+                                        </div>
+                                        <button class="btn btn-primary request-button">Request</button>
+                                    </div>
+                                </div>
+
+
+                                <div class="campaign-card card">
+                                    <div class="card-header">
+                                        <div class="company-info">
+                                            <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
+                                            <div>
+                                                <strong>CompanyName</strong><br>
+                                                <small class="text-muted">CampaignName</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="price-tag">$200</div>
+                                        <div class="campaign-details">
+                                            Campaign details go here, describing the campaign, its goals, and any other
+                                            relevant information.
+                                        </div>
+                                        <button class="btn btn-primary request-button">Request</button>
+                                    </div>
+                                </div>
+
+
+                                <div class="campaign-card card">
+                                    <div class="card-header">
+                                        <div class="company-info">
+                                            <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
+                                            <div>
+                                                <strong>CompanyName</strong><br>
+                                                <small class="text-muted">CampaignName</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="price-tag">$550</div>
+                                        <div class="campaign-details">
+                                            Campaign details go here, describing the campaign, its goals, and any other
+                                            relevant information.
+                                        </div>
+                                        <button class="btn btn-primary request-button">Request</button>
+                                    </div>
+                                </div>
+
+
+                                <div class="campaign-card card">
+                                    <div class="card-header">
+                                        <div class="company-info">
+                                            <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
+                                            <div>
+                                                <strong>CompanyName</strong><br>
+                                                <small class="text-muted">CampaignName</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="price-tag">$200</div>
+                                        <div class="campaign-details">
+                                            Campaign details go here, describing the campaign, its goals, and any other
+                                            relevant information.
+                                        </div>
+                                        <button class="btn btn-primary request-button">Request</button>
+                                    </div>
+                                </div>
+
+
+                                <div class="campaign-card card">
+                                    <div class="card-header">
+                                        <div class="company-info">
+                                            <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
+                                            <div>
+                                                <strong>CompanyName</strong><br>
+                                                <small class="text-muted">CampaignName</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="price-tag">$550</div>
+                                        <div class="campaign-details">
+                                            Campaign details go here, describing the campaign, its goals, and any other
+                                            relevant information.
+                                        </div>
+                                        <button class="btn btn-primary request-button">Request</button>
+                                    </div>
+                                </div>
+
+
+                                <div class="campaign-card card">
+                                    <div class="card-header">
+                                        <div class="company-info">
+                                            <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
+                                            <div>
+                                                <strong>CompanyName</strong><br>
+                                                <small class="text-muted">CampaignName</small>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="card-body">
+                                        <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="price-tag">$200</div>
+                                        <div class="campaign-details">
+                                            Campaign details go here, describing the campaign, its goals, and any other
+                                            relevant information.
+                                        </div>
+                                        <button class="btn btn-primary request-button">Request</button>
+                                    </div>
+                                </div>
+
+
+                                <div class="campaign-card card">
+                                    <div class="card-header">
+                                        <div class="company-info">
+                                            <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
+                                            <div>
+                                                <strong>CompanyName</strong><br>
+                                                <small class="text-muted">CampaignName</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="price-tag">$550</div>
+                                        <div class="campaign-details">
+                                            Campaign details go here, describing the campaign, its goals, and any other
+                                            relevant information.
+                                        </div>
+                                        <button class="btn btn-primary request-button">Request</button>
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Company Name</th>
+                                        <th>Campaign Name</th>
+                                        <th>Details</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo" style="width: 50px; height: 50px; border-radius: 50%;">
+                                            CompanyName
+                                        </td>
+                                        <td>CampaignName</td>
+                                        <td>Campaign details go here, describing the campaign, its goals, and any other relevant information.</td>
+                                        <td>
+                                            <button class="btn btn-success btn-sm">Accept</button>
+                                            <button class="btn btn-danger btn-sm">Reject</button>
+                                            <button class="btn btn-info btn-sm">View</button>
+                                        </td>
+                                    </tr>
+                                    <!-- Repeat <tr>...</tr> for each campaign request -->
+                                </tbody>
+                            </table>
+
                         </div>
-                    </div>
-
-                    <div class="card shadow mb-5">
-                        <div class="card-header py-3">
-                            <p class="text-primary m-0 fw-bold">Added Campaigns</p>
-                        </div>
-
-                        <div class="card-listings">
-
-
-                            <div class="campaign-card card">
-                                <div class="card-header">
-                                    <div class="company-info">
-                                        <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
-                                        <div>
-                                            <strong>CompanyName</strong><br>
-                                            <small class="text-muted">CampaignName</small>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown no-arrow campaign-options">
-                                        <a class="dropdown-toggle" href="#" id="campaignDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="campaignDropdown">
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Edit Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-eye me-2"></i>View Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-trash me-2"></i>Delete Campaign</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
-                                </div>
-                                <div class="card-footer">
-                                    <div class="price-tag">$200</div>
-                                    <div class="campaign-details">
-                                        Campaign details go here, describing the campaign, its goals, and any other relevant information.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="campaign-card card">
-                                <div class="card-header">
-                                    <div class="company-info">
-                                        <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
-                                        <div>
-                                            <strong>CompanyName</strong><br>
-                                            <small class="text-muted">CampaignName</small>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown no-arrow campaign-options">
-                                        <a class="dropdown-toggle" href="#" id="campaignDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="campaignDropdown">
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Edit Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-eye me-2"></i>View Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-trash me-2"></i>Delete Campaign</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
-                                </div>
-                                <div class="card-footer">
-                                    <div class="price-tag">$200</div>
-                                    <div class="campaign-details">
-                                        Campaign details go here, describing the campaign, its goals, and any other relevant information.
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="campaign-card card">
-                                <div class="card-header">
-                                    <div class="company-info">
-                                        <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
-                                        <div>
-                                            <strong>CompanyName</strong><br>
-                                            <small class="text-muted">CampaignName</small>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown no-arrow campaign-options">
-                                        <a class="dropdown-toggle" href="#" id="campaignDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="campaignDropdown">
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Edit Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-eye me-2"></i>View Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-trash me-2"></i>Delete Campaign</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
-                                </div>
-                                <div class="card-footer">
-                                    <div class="price-tag">$200</div>
-                                    <div class="campaign-details">
-                                        Campaign details go here, describing the campaign, its goals, and any other relevant information.
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="campaign-card card">
-                                <div class="card-header">
-                                    <div class="company-info">
-                                        <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
-                                        <div>
-                                            <strong>CompanyName</strong><br>
-                                            <small class="text-muted">CampaignName</small>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown no-arrow campaign-options">
-                                        <a class="dropdown-toggle" href="#" id="campaignDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="campaignDropdown">
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Edit Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-eye me-2"></i>View Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-trash me-2"></i>Delete Campaign</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
-                                </div>
-                                <div class="card-footer">
-                                    <div class="price-tag">$200</div>
-                                    <div class="campaign-details">
-                                        Campaign details go here, describing the campaign, its goals, and any other relevant information.
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            
-
-
-
-
-
-
-
-
-                        </div>
-
-                    </div>
-
 
 
                 </div>
@@ -478,9 +505,9 @@
             </footer>
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/bs-init.js"></script>
-    <script src="assets/js/theme.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bs-init.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 </body>
 
 </html>
