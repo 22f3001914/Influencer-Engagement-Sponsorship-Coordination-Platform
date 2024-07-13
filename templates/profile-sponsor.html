@@ -159,16 +159,9 @@
                             <li class="nav-item dropdown no-arrow">
                                 <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
                                         aria-expanded="false" data-bs-toggle="dropdown" href="#"><span
-                                            class="d-none d-lg-inline me-2 text-gray-600 small">{{influencer.username}}</span>
-                                            {% if influencer.profile_picture %}
-                                            <img class="border rounded-circle img-profile"
-                                                src="{{ url_for('static', filename='uploads/' + influencer.profile_picture) }}">
-                                            {% else %}
-                                            <img class="border rounded-circle img-profile"
-                                                src="{{ url_for('static', filename='img/dogs/image2.jpeg') }}">
-                                            {% endif %}
-                                            
-                                        </a>
+                                            class="d-none d-lg-inline me-2 text-gray-600 small">Valerie Luna</span><img
+                                            class="border rounded-circle img-profile"
+                                            src="assets/img/avatars/avatar1.jpeg"></a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a
                                             class="dropdown-item" href="#"><i
                                                 class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a
@@ -186,232 +179,91 @@
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-4">Profile</h3>
+                    <h3 class="text-dark mb-4">Company Profile</h3>
                     <div class="col">
                         <div class="col">
                             <div class="row ">
                                 <div class="col">
                                     <div class="card mb-3 col">
                                         <div class="card-body text-center shadow">
-                                            {% if influencer.profile_picture %}
+                                            {% if sponsor.company_logo %}
                                             <img class="rounded-circle mb-3 mt-4"
-                                                src="{{ url_for('static', filename='uploads/' + influencer.profile_picture) }}"
+                                                src="{{ url_for('static', filename='uploads/' + sponsor.company_logo) }}"
                                                 width="160" height="160" id="profileImage">
                                             {% else %}
                                             <img class="rounded-circle mb-3 mt-4"
                                                 src="{{ url_for('static', filename='img/dogs/image2.jpeg') }}"
                                                 width="160" height="160" id="profileImage">
                                             {% endif %}
-                                            <p class="mt-2">Username: {{ influencer.username }}</p>
-                                            <p class="mt-1">Email: {{ influencer.email }}</p>
+                                            <p class="mt-2">{{ sponsor.company_name}}</p>
                                         </div>
                                     </div>
+
                                 </div>
-                                <div class="col">
-                                    <div class="card shadow mb-3">
-                                        <div class="card-header py-3">
-                                            <h6 class="text-primary fw-bold m-0">Platform Statistics</h6>
-                                        </div>
-                                        <div class="card-body">
-                                            <h4 class="small fw-bold">Instagram Followers<span
-                                                    class="float-end">{{follower_percent.instagram}}%</span></h4>
-                                            <div class="progress mb-4">
-                                                <div class="progress-bar bg-warning"
-                                                    aria-valuenow="{{follower_percent.instagram}}" aria-valuemin="0"
-                                                    aria-valuemax="100" style="width: {{follower_percent.instagram}}%;">
-                                                    <span class="visually-hidden">{{follower_percent.instagram}}%</span>
-                                                </div>
-                                            </div>
-                                            <h4 class="small fw-bold">Twitter Followers<span
-                                                    class="float-end">{{follower_percent.twitter}}%</span></h4>
-                                            <div class="progress mb-4">
-                                                <div class="progress-bar bg-danger"
-                                                    aria-valuenow="{{follower_percent.twitter}}" aria-valuemin="0"
-                                                    aria-valuemax="100" style="width: {{follower_percent.twitter}}%;">
-                                                    <span class="visually-hidden">{{follower_percent.twitter}}%</span>
-                                                </div>
-                                            </div>
-                                            <h4 class="small fw-bold">YouTube Subscribers<span
-                                                    class="float-end">{{follower_percent.youtube}}%</span></h4>
-                                            <div class="progress mb-4">
-                                                <div class="progress-bar bg-info"
-                                                    aria-valuenow="{{follower_percent.youtube}}" aria-valuemin="0"
-                                                    aria-valuemax="100" style="width: {{follower_percent.youtube}}%;">
-                                                    <span class="visually-hidden">{{follower_percent.youtube}}%</span>
-                                                </div>
-                                            </div>
-                                        </div>
+                            </div>
+                            <!-- Company Information Card -->
+                            <div class="col">
+                                <div class="card shadow mb-3">
+                                    <div class="card-header py-3">
+                                        <p class="text-primary m-0 fw-bold">Company Information</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ sponsor.company_name }}</h5>
+                                        <p class="card-text">Industry: {{ sponsor.industry }}</p>
+                                        <p class="card-text">Description: {{ sponsor.company_description }}</p>
+                                        <a href="{{ sponsor.company_website }}" class="btn btn-primary">
+                                            <i class="fas fa-globe"></i> Visit Website
+                                        </a>
                                     </div>
                                 </div>
-
-
                             </div>
-                        </div>
 
-                    </div>
 
-                    <!-- Pics  -->
-                    <div class="row">
-                        <div class="col">
-                            <div class="card shadow mb-3 mt-4">
-                                <div class="card-header py-3">
-                                    <p class="text-primary m-0 fw-bold">Posts</p>
+                            <!-- Contact Information Card -->
+                            <div class="col">
+
+                                <div class="card shadow mb-3">
+                                    <div class="card-header py-3">
+                                        <p class="text-primary m-0 fw-bold">Contact Information</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">Contact Person: {{ sponsor.contact_person }}
+                                        </p>
+                                        <p class="card-text">Email: {{ sponsor.email }}</p>
+                                        <p class="card-text">Phone Number: {{ sponsor.contact_number }}</p>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    {% if influencer.posts|length > 0 %}
-                                    {% for post in influencer.posts %}
-                                    <figure class="snip1527">
-                                        <!-- Dynamically generated posts go here -->
-                                        <div class="image"><img
-                                                src="{{ url_for('static', filename='uploads/' + post.media) }}"
-                                                alt="pr-sample23" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">{{ post.created_at.strftime('%d')
-                                                    }}</span><span class="month">{{ post.created_at.strftime('%b')
-                                                    }}</span>
-                                            </div>
-                                            <h3>{{post.post}}</h3>
-                                            <p>
+                            </div>
 
-                                                
-                                            </p>
-                                        </figcaption>
-                                    </figure>
-                                    <a href="#"></a>
-                                    {% endfor %}
 
-                                    {% else %}
-                                    <p>No posts available.</p>
-                                    {% endif %}
-                                </div>
-                                <div class="card-body">
-                                    <figure class="snip1527">
-                                        <div class="image"><img
-                                                src="{{ url_for('static', filename='img/dogs/image2.jpeg') }}"
-                                                alt="pr-sample23" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">28</span><span class="month">Oct</span>
-                                            </div>
-                                            <h3>The World Ended Yesterday</h3>
-                                            <p>
-
-                                                You know what we need, Hobbes? We need an attitude. Yeah, you can't be
-                                                cool if you don't
-                                                have an attitude.
-                                            </p>
-                                        </figcaption>
-                                        <a href="#"></a>
-                                    </figure>
-
-                                    <figure class="snip1527">
-                                        <div class="image"><img
-                                                src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/pr-sample25.jpg"
-                                                alt="pr-sample25" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">01</span><span class="month">Dec</span>
-                                            </div>
-                                            <h3>Downthing</h3>
-                                            <p>
-
-                                                I
-                                            </p>
-                                        </figcaption>
-                                        <a href="#"></a>
-                                    </figure>
+                            <!-- Campaigns by company -->
+                            <div class="col">
+                                <div class="card shadow mb-3">
+                                    <div class="card-header py-3">
+                                        <p class="text-primary m-0 fw-bold">Company Campaigns</p>
+                                    </div>
 
                                 </div>
                             </div>
+
+
+
                         </div>
+
+
                     </div>
-
-                    <!-- Ads by Influencer -->
-                    <div class="row">
-                        <div class="col">
-                            <div class="card shadow mb-3 mt-4">
-                                <div class="card-header py-3">
-                                    <p class="text-primary m-0 fw-bold">Ads By {{influencer.username}}</p>
-                                </div>
-                                <div class="card-body">
-                                    {% if influencer.ad_requests|length > 0 %}
-                                    {% for ad in influencer.ad_requests %}
-                                    <figure class="snip1527">
-                                        <!-- Dynamically generated posts go here -->
-                                        <div class="image"><img
-                                            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/pr-sample23.jpg"
-                                                alt="pr-sample23" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">{{ ad.created_at.strftime('%d')
-                                                    }}</span><span class="month">{{ ad.created_at.strftime('%b')
-                                                    }}</span>
-                                            </div>
-                                            <h3>{{ad.ad_name}}</h3>
-                                            <p>
-                                                {{ad.ad_description}}
-
-                                                
-                                            </p>
-                                        </figcaption>
-                                    </figure>
-                                    <a href="#"></a>
-                                    {% endfor %}
-
-                                    {% else %}
-                                    <p>No ads to show.</p>
-                                    {% endif %}
-                                </div>
-                                <div class="card-body">
-                                    <figure class="snip1527">
-                                        <div class="image"><img
-                                                src="{{ url_for('static', filename='img/dogs/image2.jpeg') }}"
-                                                alt="pr-sample23" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">28</span><span class="month">Oct</span>
-                                            </div>
-                                            <h3>The World Ended Yesterday</h3>
-                                            <p>
-
-                                                You know what we need, Hobbes? We need an attitude. Yeah, you can't be
-                                                cool if you don't
-                                                have an attitude.
-                                            </p>
-                                        </figcaption>
-                                        <a href="#"></a>
-                                    </figure>
-
-                                    <figure class="snip1527">
-                                        <div class="image"><img
-                                                src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/pr-sample25.jpg"
-                                                alt="pr-sample25" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">01</span><span class="month">Dec</span>
-                                            </div>
-                                            <h3>Downthing</h3>
-                                            <p>
-
-                                                I
-                                            </p>
-                                        </figcaption>
-                                        <a href="#"></a>
-                                    </figure>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
+                <footer class="bg-white sticky-footer">
+                    <div class="container my-auto">
+                        <div class="text-center my-auto copyright"><span>Copyright © Brand 2024</span></div>
+                    </div>
+                </footer>
             </div>
-            <footer class="bg-white sticky-footer">
-                <div class="container my-auto">
-                    <div class="text-center my-auto copyright"><span>Copyright © Brand 2024</span></div>
-                </div>
-            </footer>
+            <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
         </div>
-        <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
-    </div>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bs-init.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bs-init.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 </body>
 
 </html>

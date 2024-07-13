@@ -85,7 +85,7 @@
             color: #555;
         }
     </style>
-        
+
 </head>
 
 <body id="page-top">
@@ -256,7 +256,7 @@
 
                 <div class="container-fluid">
                     <h3 class="text-dark mb-1">Add Campaigns</h3>
-                    
+
                     <div class="row">
 
                         <div class="col">
@@ -265,27 +265,48 @@
                                     <p class="text-primary m-0 fw-bold">Add New Campaign</p>
                                 </div>
                                 <div class="card-body">
-                                    <form>
+                                    <form action='/sponsor/{{sponsor.id}}/campaign' method="post" ,
+                                        enctype="multipart/form-data">
                                         <div class="mb-3">
-                                            <label class="form-label" for="campaign_name"><strong>Campaign Name</strong></label>
-                                            <input class="form-control" type="text" id="campaign_name" placeholder="Enter campaign name" name="campaign_name">
+                                            <label class="form-label" for="campaign_name"><strong>Campaign
+                                                    Name</strong></label>
+                                            <input class="form-control" type="text" id="campaign_name"
+                                                placeholder="Enter campaign name" name="campaign_name">
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label" for="campaign_details"><strong>Campaign Details</strong></label>
-                                            <textarea class="form-control" id="campaign_details" placeholder="Enter campaign details" name="campaign_details" rows="3"></textarea>
+                                            <label class="form-label" for="campaign_details"><strong>Campaign
+                                                    Details</strong></label>
+                                            <textarea class="form-control" id="campaign_details"
+                                                placeholder="Enter campaign details" name="campaign_details"
+                                                rows="3"></textarea>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label" for="campaign_images"><strong>Campaign Images</strong></label>
-                                            <input class="form-control" type="file" id="campaign_images" name="campaign_images" multiple>
-                                            <small class="form-text text-muted">You can select multiple images.</small>
+                                            <div>
+                                                <label class="form-label" for="campaign_images"><strong>Campaign
+                                                        Images</strong></label>
+                                                <input class="form-control" type="file" id="campaign_images"
+                                                    name="campaign_images" multiple>
+                                                <small class="form-text text-muted">You can select multiple
+                                                    images.</small>
+
+                                            </div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="visibility"
+                                                    name="visibility" value="public">
+                                                <label class="form-check-label" for="visibility"><strong>Private
+                                                        Campaign?</strong> Toggle on to restrict public access.</label>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4 mb-3">
-                                                <label class="form-label" for="age_group"><strong>Target Age Group</strong></label>
-                                                <input class="form-control" type="text" id="age_group" placeholder="e.g., 18-24" name="age_group">
+                                                <label class="form-label" for="age_group"><strong>Target Age
+                                                        Group</strong></label>
+                                                <input class="form-control" type="text" id="age_group"
+                                                    placeholder="e.g., 18-24" name="age_group">
                                             </div>
                                             <div class="col-md-4 mb-3">
-                                                <label class="form-label" for="gender"><strong>Target Gender</strong></label>
+                                                <label class="form-label" for="gender"><strong>Target
+                                                        Gender</strong></label>
                                                 <select class="form-select" id="gender" name="gender">
                                                     <option value="any">Any</option>
                                                     <option value="male">Male</option>
@@ -294,22 +315,28 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-4 mb-3">
-                                                <label class="form-label" for="campaign_price"><strong>Campaign Price</strong></label>
-                                                <input class="form-control" type="number" id="campaign_price" placeholder="Enter price" name="campaign_price">
+                                                <label class="form-label" for="campaign_price"><strong>Campaign
+                                                        Budget</strong></label>
+                                                <input class="form-control" type="number" id="campaign_budget"
+                                                    placeholder="Enter budget" name="campaign_budget">
                                             </div>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label"><strong>Platforms</strong></label>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="platform_youtube" name="platforms" value="youtube">
+                                                <input class="form-check-input" type="checkbox" id="platform_youtube"
+                                                    name="platforms" value="youtube">
                                                 <label class="form-check-label" for="platform_youtube">YouTube</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="platform_instagram" name="platforms" value="instagram">
-                                                <label class="form-check-label" for="platform_instagram">Instagram</label>
+                                                <input class="form-check-input" type="checkbox" id="platform_instagram"
+                                                    name="platforms" value="instagram">
+                                                <label class="form-check-label"
+                                                    for="platform_instagram">Instagram</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="platform_twitter" name="platforms" value="twitter">
+                                                <input class="form-check-input" type="checkbox" id="platform_twitter"
+                                                    name="platforms" value="twitter">
                                                 <label class="form-check-label" for="platform_twitter">Twitter</label>
                                             </div>
                                         </div>
@@ -328,132 +355,255 @@
                         </div>
 
                         <div class="card-listings">
+                            {% if sponsor.campaigns %}
+                            {% for campaign in sponsor.campaigns %}
+
+<div>
+    <div class="campaign-card card">
+        <div class="card-header">
+            <div class="company-info">
+                <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
+                <div>
+                  <strong>{{ campaign.name }}</strong><br>
+                  <small class="text-muted">{{ sponsor.company_name }}</small>
+                  
+                </div>
+              </div>
+              <div>
+                {% if campaign.visibility %}
+                <span class="badge bg-success m-1">Private</span>
+              {% else %}
+                <span class="badge bg-info m-1">Public</span>
+              {% endif %}
+              </div>
+              
+            <div class="dropdown no-arrow campaign-options">
+                <a class="dropdown-toggle" href="#" id="campaignDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="campaignDropdown">
+                    <li><a class="dropdown-item"  class="btn btn-primary" data-toggle="modal" data-target="#campaignModal{{campaign.id}}" href="#"><i class="fas fa-edit me-2"></i>Edit
+                            Campaign</a></li>
+                    <li><a class="dropdown-item" href="/campaign/{{campaign.id}}/ad"><i class="fas fa-eye me-2"></i>View
+                            Campaign</a></li>
+                    <li><a class="dropdown-item" href="/sponsor/{{sponsor.id}}/deletecampaign/{{campaign.id}}"><i
+                                class="fas fa-trash me-2"></i>Delete Campaign</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-body">
+            <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
+        </div>
+        <div class="card-footer">
+            <div class="price-tag">${{campaign.budget}}</div>
+            <div class="campaign-details">
+                {{campaign.details}}
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap Modal for Campaign Form -->
+<div class="modal fade" id="campaignModal{{campaign.id}}" tabindex="-1" aria-labelledby="campaignModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="campaignModalLabel">Edit Campaign</h5>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+          </div>
+        <div class="modal-body">
+            <form action='/sponsor/{{sponsor.id}}/updatecampaign/{{campaign.id}}' method="post" ,
+            enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label" for="mcampaign_name"><strong>Campaign
+                        Name</strong></label>
+                <input class="form-control" type="text" id="mcampaign_name"
+                    value ="{{campaign.name}}" name="campaign_name">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="mcampaign_details"><strong>Campaign Details</strong></label>
+                <textarea class="form-control" id="mcampaign_details"
+                     name="campaign_details"
+                    rows="3">{{campaign.details}}</textarea>
+            </div>
+            <div class="mb-3">
+                <div>
+                    <label class="form-label" for="mcampaign_images"><strong>Campaign
+                            Images</strong></label>
+                    <input class="form-control" type="file" id="mcampaign_images"
+                        name="campaign_images" multiple>
+                    <small class="form-text text-muted">You can select multiple
+                        images.</small>
+
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="mvisibility" name="mvisibility" value="public" {{ 'checked' if not campaign.visibility else '' }}>
+                    <label class="form-check-label" for="mvisibility"><strong>Private Campaign?</strong> Toggle on to restrict public access.</label>
+                  </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label" for="mage_group"><strong>Target Age
+                            Group</strong></label>
+                    <input class="form-control" type="text" id="mage_group"
+                        value ="{{campaign.age_group}}" name="age_group">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label" for="mgender"><strong>Target Gender</strong></label>
+                    <select class="form-select" id="mgender" name="gender">
+                      <option value="any" {{ 'selected' if campaign.gender == 'any' else '' }}>Any</option>
+                      <option value="male" {{ 'selected' if campaign.gender == 'male' else '' }}>Male</option>
+                      <option value="female" {{ 'selected' if campaign.gender == 'female' else '' }}>Female</option>
+                      <option value="other" {{ 'selected' if campaign.gender == 'other' else '' }}>Other</option>
+                    </select>
+                  </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label" for="mcampaign_price"><strong>Campaign
+                            Budget</strong></label>
+                    <input class="form-control" type="number" id="mcampaign_budget"
+                        value = "{{campaign.budget}}" name="campaign_budget">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label"><strong>Platforms</strong></label>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="mplatform_youtube" name="platforms" value="youtube" {{ 'checked' if campaign.platform_youtube else '' }}>
+                  <label class="form-check-label" for="mplatform_youtube">YouTube</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="mplatform_instagram" name="platforms" value="instagram" {{ 'checked' if campaign.platform_instagram else '' }}>
+                  <label class="form-check-label" for="mplatform_instagram">Instagram</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="mplatform_twitter" name="platforms" value="twitter" {{ 'checked' if campaign.platform_twitter else '' }}>
+                  <label class="form-check-label" for="mplatform_twitter">Twitter</label>
+                </div>
+              </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary btn-sm" id="updateCampaign"><i class="fas fa-edit"></i> Update </button>
+        </div>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% else %}
+  <p>No campaigns found for this sponsor.</p>
+{% endif %}
+                            
+
+                            <div class="campaign-card card">
+                                <div class="card-header">
+                                    <div class="company-info">
+                                        <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
+                                        <div>
+                                            <strong>CompanyName</strong><br>
+                                            <small class="text-muted">CampaignName</small>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown no-arrow campaign-options">
+                                        <a class="dropdown-toggle" href="#" id="campaignDropdown" role="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="campaignDropdown">
+                                            <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Edit
+                                                    Campaign</a></li>
+                                            <li><a class="dropdown-item" href="#"><i class="fas fa-eye me-2"></i>View
+                                                    Campaign</a></li>
+                                            <li><a class="dropdown-item" href="#"><i
+                                                        class="fas fa-trash me-2"></i>Delete Campaign</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
+                                </div>
+                                <div class="card-footer">
+                                    <div class="price-tag">$200</div>
+                                    <div class="campaign-details">
+                                        Campaign details go here, describing the campaign, its goals, and any other
+                                        relevant information.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="campaign-card card">
+                                <div class="card-header">
+                                    <div class="company-info">
+                                        <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
+                                        <div>
+                                            <strong>CompanyName</strong><br>
+                                            <small class="text-muted">CampaignName</small>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown no-arrow campaign-options">
+                                        <a class="dropdown-toggle" href="#" id="campaignDropdown" role="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="campaignDropdown">
+                                            <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Edit
+                                                    Campaign</a></li>
+                                            <li><a class="dropdown-item" href="#"><i class="fas fa-eye me-2"></i>View
+                                                    Campaign</a></li>
+                                            <li><a class="dropdown-item" href="#"><i
+                                                        class="fas fa-trash me-2"></i>Delete Campaign</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
+                                </div>
+                                <div class="card-footer">
+                                    <div class="price-tag">$200</div>
+                                    <div class="campaign-details">
+                                        Campaign details go here, describing the campaign, its goals, and any other
+                                        relevant information.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="campaign-card card">
+                                <div class="card-header">
+                                    <div class="company-info">
+                                        <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
+                                        <div>
+                                            <strong>CompanyName</strong><br>
+                                            <small class="text-muted">CampaignName</small>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown no-arrow campaign-options">
+                                        <a class="dropdown-toggle" href="#" id="campaignDropdown" role="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="campaignDropdown">
+                                            <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Edit
+                                                    Campaign</a></li>
+                                            <li><a class="dropdown-item" href="#"><i class="fas fa-eye me-2"></i>View
+                                                    Campaign</a></li>
+                                            <li><a class="dropdown-item" href="#"><i
+                                                        class="fas fa-trash me-2"></i>Delete Campaign</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
+                                </div>
+                                <div class="card-footer">
+                                    <div class="price-tag">$200</div>
+                                    <div class="campaign-details">
+                                        Campaign details go here, describing the campaign, its goals, and any other
+                                        relevant information.
+                                    </div>
+                                </div>
+                            </div>
 
 
-                            <div class="campaign-card card">
-                                <div class="card-header">
-                                    <div class="company-info">
-                                        <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
-                                        <div>
-                                            <strong>CompanyName</strong><br>
-                                            <small class="text-muted">CampaignName</small>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown no-arrow campaign-options">
-                                        <a class="dropdown-toggle" href="#" id="campaignDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="campaignDropdown">
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Edit Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-eye me-2"></i>View Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-trash me-2"></i>Delete Campaign</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
-                                </div>
-                                <div class="card-footer">
-                                    <div class="price-tag">$200</div>
-                                    <div class="campaign-details">
-                                        Campaign details go here, describing the campaign, its goals, and any other relevant information.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="campaign-card card">
-                                <div class="card-header">
-                                    <div class="company-info">
-                                        <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
-                                        <div>
-                                            <strong>CompanyName</strong><br>
-                                            <small class="text-muted">CampaignName</small>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown no-arrow campaign-options">
-                                        <a class="dropdown-toggle" href="#" id="campaignDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="campaignDropdown">
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Edit Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-eye me-2"></i>View Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-trash me-2"></i>Delete Campaign</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
-                                </div>
-                                <div class="card-footer">
-                                    <div class="price-tag">$200</div>
-                                    <div class="campaign-details">
-                                        Campaign details go here, describing the campaign, its goals, and any other relevant information.
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="campaign-card card">
-                                <div class="card-header">
-                                    <div class="company-info">
-                                        <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
-                                        <div>
-                                            <strong>CompanyName</strong><br>
-                                            <small class="text-muted">CampaignName</small>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown no-arrow campaign-options">
-                                        <a class="dropdown-toggle" href="#" id="campaignDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="campaignDropdown">
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Edit Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-eye me-2"></i>View Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-trash me-2"></i>Delete Campaign</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
-                                </div>
-                                <div class="card-footer">
-                                    <div class="price-tag">$200</div>
-                                    <div class="campaign-details">
-                                        Campaign details go here, describing the campaign, its goals, and any other relevant information.
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="campaign-card card">
-                                <div class="card-header">
-                                    <div class="company-info">
-                                        <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
-                                        <div>
-                                            <strong>CompanyName</strong><br>
-                                            <small class="text-muted">CampaignName</small>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown no-arrow campaign-options">
-                                        <a class="dropdown-toggle" href="#" id="campaignDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v"></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="campaignDropdown">
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Edit Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-eye me-2"></i>View Campaign</a></li>
-                                            <li><a class="dropdown-item" href="#"><i class="fas fa-trash me-2"></i>Delete Campaign</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
-                                </div>
-                                <div class="card-footer">
-                                    <div class="price-tag">$200</div>
-                                    <div class="campaign-details">
-                                        Campaign details go here, describing the campaign, its goals, and any other relevant information.
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            
 
 
 
@@ -472,6 +622,8 @@
 
 
             </div>
+
+
             <footer class="bg-white sticky-footer">
                 <div class="container my-auto">
                     <div class="text-center my-auto copyright"><span>Copyright © Brand 2024</span></div>
@@ -483,6 +635,10 @@
     <script src="{{ url_for('static', filename='js/bs-init.js') }}"></script>
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <script src="assets/js/theme.js"></script>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap Bundle JS (includes Popper) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

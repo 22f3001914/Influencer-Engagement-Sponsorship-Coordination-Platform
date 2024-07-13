@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencer Profile</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+                <h1>dsfsdf</h1>
+                <p>sfsfdfgdf</p>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#paymentModal">Pay Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentModalLabel">Payment Portal</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Company Name: {{ negotiation.ad_request.campaign.company_name }}</p>
+                    <p>Amount: ₹{{ negotiation.ad_request.ad_payment }}</p>
+                    <button type="button" class="btn btn-primary mb-3" id="payByCard">Pay Using Card</button>
+                    <button type="button" class="btn btn-secondary mb-3" id="payByQR">Scan and Pay</button>
+                    
+                    <!-- Card Payment Form -->
+                    <form id="cardPaymentForm" style="display: none;">
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number:</label>
+                            <input type="text" class="form-control" id="cardNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="expiryDate">Expiry Date:</label>
+                            <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV:</label>
+                            <input type="text" class="form-control" id="cvv" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Pay</button>
+                    </form>
+
+                    <!-- QR Code Payment -->
+                    <div id="qrCodeSection" style="display: none;">
+                        <h3>Scan this QR code to pay:</h3>
+                        <img id="qrCodeImage" src="#" alt="QR Code">
+                        <button type="button" class="btn btn-success mt-3" id="markAsPaid">Mark as Paid</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#payByCard').click(function() {
+                $('#cardPaymentForm').show();
+                $('#qrCodeSection').hide();
+            });
+
+            $('#payByQR').click(function() {
+                $('#cardPaymentForm').hide();
+                $('#qrCodeSection').show();
+
+                $.ajax({
+                    url: '/generate_qr/{{ negotiation.id }}',
+                    method: 'GET',
+                    success: function(data) {
+                        $('#qrCodeImage').attr('src', data.qr_code_url);
+                    }
+                });
+            });
+
+            $('#markAsPaid').click(function() {
+                $.ajax({
+                    url: '/mark_as_paid/{{ negotiation.id }}',
+                    method: 'POST',
+                    success: function() {
+                        alert('Payment marked as paid.');
+                        $('#paymentModal').modal('hide');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

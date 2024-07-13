@@ -4,12 +4,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Blank Page - Brand</title>
+    <title>Sponsor Negotiation </title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='fonts/fontawesome-all.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/News-Cards.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         .card-listings {
             display: grid;
@@ -19,8 +20,7 @@
         }
 
         .campaign-card {
-            max-width: 310px;
-            min-width: 250px;
+            max-width: 400px;
             margin: 20px auto;
             border: 1px solid #ddd;
             border-radius: 10px;
@@ -83,6 +83,57 @@
         .campaign-card .campaign-details {
             margin: 10px 0;
             color: #555;
+        }
+    </style>
+    <style>
+        .chat-box {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            border: 1px solid #e3e6f0;
+            margin-bottom: 15px;
+        }
+
+        .chat-message {
+            margin-bottom: 20px;
+        }
+
+        .chat-message.influencer {
+            text-align: left;
+        }
+
+        .chat-message.sponsor {
+            text-align: right;
+        }
+
+        .chat-date {
+            display: block;
+            font-size: 0.8em;
+            margin-bottom: 5px;
+        }
+
+        .chat-user {
+            font-weight: bold;
+        }
+
+        .chat-text {
+            display: inline-block;
+            padding: 10px;
+            background: #f4f6f9;
+            border-radius: 10px;
+        }
+
+        .chat-input {
+            display: flex;
+        }
+
+        .chat-input textarea {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .send-btn {
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -232,7 +283,7 @@
                             <li class="nav-item dropdown no-arrow">
                                 <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
                                         aria-expanded="false" data-bs-toggle="dropdown" href="#"><span
-                                            class="d-none d-lg-inline me-2 text-gray-600 small">{{admin.username}}</span><img
+                                            class="d-none d-lg-inline me-2 text-gray-600 small">Valerie Luna</span><img
                                             class="border rounded-circle img-profile"
                                             src="assets/img/avatars/avatar1.jpeg"></a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a
@@ -253,295 +304,236 @@
                 </nav>
 
 
-
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-4">Find Campaigns and Influencers</h3>
-                    <!--Campaigns-->
+                    <h3 class="text-dark mb-4">Ad Negotiation</h3>
 
-                    {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                      {{ messages[-1] }}
-                    {% endif %}
-                  {% endwith %}
-                    <div class="card shadow mb-5">
-                        <div class="card-header py-3">
-                            <p class="text-primary m-0 fw-bold">Campaigns</p>
+                    <!-- Negotiation Details -->
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="card shadow mb-3 mt-4">
+                                <div class="card-header py-3">
+                                    <p class="text-primary m-0 fw-bold">Negotiation Chat</p>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Company Details Section -->
+                                    <div class="company-details mb-4">
+                                        <img src="path/to/company-logo.png" alt="Company Logo"
+                                            style="width: 50px; height: 50px; border-radius: 50%;">
+                                        <h5 class="d-inline-block ml-3">Company Name</h5>
+                                    </div>
+                                    <!-- Chat Box -->
+                                    <div class="chat-box">
+                                        
+                                        <!-- Messages will be dynamically inserted here -->
+                                        {% for message in negotiation.messages %}
+                                        <div class="chat-message {{message.sender}}">
+                                            <span class="chat-date">{{message.sent_at}}</span>
+                                            <!-- <h5 class="chat-user">{{message.sender}}</h5> -->
+                                            <p class="chat-text">{{message.content}}</p>
+                                        </div>
+                                        {% endfor %}
+                                        <!-- Add more messages here -->
+                                        {% if negotiation.status == 'accepted' %}
+                                        <div class="chat-message sponsor">
+                                            <h5 class="chat-user">
+                                                Congratulations!! Your negotiation just got accepted at
+                                                RS. {{negotiation.ad_request.ad_payment}} with terms: {{negotiation.ad_request.ad_terms}}
+
+                                            </h5>
+
+                                        </div>
+                                        {% elif negotiation.status == 'rejected' %}
+                                        <div class="chat-message sponsor">
+                                            <h5 class="chat-user">
+                                                Your negotiation is rejected.
+                                            </h5>
+                                        </div>
+                                        {% elif negotiation.status == 'withdrawn' %}
+                                        <div class="chat-message sponsor">
+                                            <h5 class="chat-user">
+                                                Ad Request is  withdraw.
+                                            </h5>
+                                        </div>
+                                        
+                                        {% endif %}
+
+
+
+
+                                    </div>
+                                    <!-- Chat Input -->
+                                    {% if negotiation.status == 'negotiating' or negotiation.status == 'accepted' %}
+                                    <div class="chat-input">
+
+                                        <form action="/negotiatesponsor/{{negotiation.id}}" method="post">
+                                            <textarea class="form-control" placeholder="Type your message here..."
+                                                name="message"></textarea>
+                                            <button type="submit" class="btn btn-primary send-btn">
+                                                <i class="fas fa-paper-plane"></i>
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+                                    {% else %}
+                                    <p>Ad Requested {{negotiation.status}} </p>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="card-listings">
-
-                            <div class="campaign-card card">
-                                <div class="card-header">
-                                    <div class="company-info">
-                                        <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
-                                        <div>
-                                            <strong>CompanyName</strong><br>
-                                            <small class="text-muted">CampaignName</small>
-                                        </div>
-                                    </div>
+                        <div class="col-lg-4">
+                            <div class="card shadow mb-3 mt-4">
+                                <div class="card-header py-3">
+                                    <p class="text-primary m-0 fw-bold">Final Negotiation</p>
                                 </div>
                                 <div class="card-body">
-                                    <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
-                                </div>
-                                <div class="card-footer">
-                                    <div class="price-tag">$200</div>
-                                    <div class="campaign-details">
-                                        Campaign details go here, describing the campaign, its goals, and any other
-                                        relevant information.
-                                    </div>
-                                    <button class="btn btn-warning request-button text-white">
-                                        <i class="fas fa-flag"></i> Flag
-                                    </button>
-                                    <button class="btn btn-success request-button text-white">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                </div>
-                            </div>
-
-
-
-
-                            <div class="campaign-card card">
-                                <div class="card-header">
-                                    <div class="company-info">
-                                        <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
-                                        <div>
-                                            <strong>CompanyName</strong><br>
-                                            <small class="text-muted">CampaignName</small>
+                                    {% if negotiation.status == 'negotiating' %}
+                                    <form action="/finalnegotiation/{{negotiation.id}}"
+                                        method="post">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="payment"><strong>Payment</strong></label>
+                                            <input type="number" class="form-control" id="payment"
+                                                placeholder="Enter payment amount"
+                                                value="{{negotiation.ad_request.ad_payment}}" name="new_payment">
                                         </div>
-                                    </div>
-
-                                </div>
-                                <div class="card-body">
-                                    <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
-                                </div>
-                                <div class="card-footer">
-                                    <div class="price-tag">$550</div>
-                                    <div class="campaign-details">
-                                        Campaign details go here, describing the campaign, its goals, and any other
-                                        relevant information.
-                                    </div>
-                                    <button class="btn btn-warning request-button text-white">
-                                        <i class="fas fa-flag"></i> Flag
-                                    </button>
-                                    <button class="btn btn-success request-button text-white">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                </div>
-                            </div>
-
-
-                            <div class="campaign-card card">
-                                <div class="card-header">
-                                    <div class="company-info">
-                                        <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
-                                        <div>
-                                            <strong>CompanyName</strong><br>
-                                            <small class="text-muted">CampaignName</small>
+                                        <div class="mb-3">
+                                            <label class="form-label" for="terms"><strong>Terms</strong></label>
+                                            <textarea class="form-control" id="terms" rows="2" placeholder="Enter terms"
+                                                name="new_terms">
+                                                {{negotiation.ad_request.ad_terms}}
+                                            </textarea>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
-                                </div>
-                                <div class="card-footer">
-                                    <div class="price-tag">$200</div>
-                                    <div class="campaign-details">
-                                        Campaign details go here, describing the campaign, its goals, and any other
-                                        relevant information.
-                                    </div>
-                                    <button class="btn btn-warning request-button text-white">
-                                        <i class="fas fa-flag"></i> Flag
-                                    </button>
-                                    <button class="btn btn-success request-button text-white">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                </div>
-                            </div>
 
+                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#paymentModal">Pay Now</button>
+                                        <a href="/cancelnegotiation/{{negotiation.id}}"
+                                            class="btn btn-danger btn-sm">Reject</a>
+                                        <a href="/withdrawnegotiation/{{negotiation.id}}"
+                                            class="btn btn-secondary btn-sm">Withdraw</a>
+                                    </form>
 
-                            <div class="campaign-card card">
-                                <div class="card-header">
-                                    <div class="company-info">
-                                        <img src="assets/img/avatars/avatar5.jpeg" alt="Company Logo">
-                                        <div>
-                                            <strong>CompanyName</strong><br>
-                                            <small class="text-muted">CampaignName</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <img src="/assets/img/dogs/campaign.jpeg" alt="Campaign Image">
-                                </div>
-                                <div class="card-footer">
-                                    <div class="price-tag">$550</div>
-                                    <div class="campaign-details">
-                                        Campaign details go here, describing the campaign, its goals, and any other
-                                        relevant information.
-                                    </div>
-                                    <button class="btn btn-warning request-button text-white">
-                                        <i class="fas fa-flag"></i> Flag
-                                    </button>
-                                    <button class="btn btn-success request-button text-white">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
+                                    {% else %}
+                                    {% if negotiation.status == 'accepted' %}
+                                    <span class="badge bg-success">Accepted</span>
+                                    {% elif negotiation.status == 'rejected' %}
+                                    <span class="badge bg-danger">Rejected</span>
+                                    {% elif negotiation.status == 'withdrawn' %}
+                                    <span class="badge bg-warning">Withdrawn</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">Unknown Status</span>
+                                    {% endif %}
+                                    {% endif %}
+
                                 </div>
                             </div>
-
-
-
-
                         </div>
-
-
-
                     </div>
-                    {% set unflagged_influencers = influencers|selectattr("isflagged", "equalto", false)|list %}
-                    {% set flagged_influencers = influencers|selectattr("isflagged", "equalto", true)|list %}
+
+
+                </div>
+                <footer class="bg-white sticky-footer">
+                    <div class="container my-auto">
+                        <div class="text-center my-auto copyright"><span>Copyright © Brand 2024</span></div>
+                    </div>
+                </footer>
+            </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+        </div>
+            <!-- Payment Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentModalLabel">Payment Portal</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Amount: ₹{{ negotiation.ad_request.ad_payment }}</p>
+                    <button type="button" class="btn btn-primary mb-3 btn-sm" id="payByCard">Pay Using Card</button>
+                    <button type="button" class="btn btn-secondary mb-3 btn-sm" id="payByQR">Scan and Pay</button>
                     
-                    <!-- Influencers-->
-                    <div class="row">
-                        <div class="col">
-                            <div class="card shadow mb-3 mt-4">
-                                <div class="card-header py-3">
-                                    <p class="text-primary m-0 fw-bold">Influencers</p>
-                                </div>
-                                <div class="card-body">
-
-                                    {% if unflagged_influencers|length > 0 %}
-                                    {% for influencer in unflagged_influencers %}
-                                    <figure class="snip1527">
-                                        <div class="image">
-                                            {% if influencer.profile_picture %}
-                                            <img class="rounded-circle mb-3 mt-4"
-                                                src="{{ url_for('static', filename='uploads/' + influencer.profile_picture) }}">
-                                            {% else %}
-                                            <img class="rounded-circle mb-3 mt-4"
-                                                src="{{ url_for('static', filename='img/dogs/image2.jpeg') }}">
-                                            {% endif %}
-                                        </div>
-                                        <figcaption>
-                                            <div class="date"><span class="day"><i class="fas fa-eye"></i></span><span class="month">View</span>
-                                                <a href="/influencer/profile/{{influencer.id}}"></a></div>
-                                            <h3>{{ influencer.username }}</h3>
-                                            <p>{{ influencer.description_of_content }}</p>
-
-                                            <!-- Flag/Report Button -->
-                                            <button class="btn btn-danger btn-sm" style="position: absolute; bottom: 10px; right: 10px;">
-                                                <i class="fas fa-flag"></i>
-                                                <a href="/admin/{{admin.id}}/flag/{{influencer.id}}"></a>
-                                            </button>
-                                        </figcaption>
-                                        
-                                    </figure>
-                                    {% endfor %}
-                                {% else %}
-                                    <p>No influencers found.</p>
-                                {% endif %}
-                                    <figure class="snip1527">
-                                        <div class="image"><img
-                                                src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/pr-sample25.jpg"
-                                                alt="pr-sample25" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">01</span><span class="month">Dec</span>
-                                            </div>
-                                            <h3>Down with this sort of thing</h3>
-                                            <p>
-
-                                                I don't need to compromise my principles, because they don't have the
-                                                slightest bearing on
-                                                what happens to me anyway.
-                                            </p>
-                                        </figcaption>
-                                        <a href="#"></a>
-                                    </figure>
-
-                                </div>
+                    <!-- Card Payment Form -->
+                    <form id="cardPaymentForm" style="display: none;" action="/finalnegotiation/{{negotiation.id}}"
+                    method="post">
+                        <div class="d-none">
+                            <div class="mb-3">
+                                <label class="form-label" for="payment"><strong>Payment</strong></label>
+                                <input type="number" class="form-control" id="payment"
+                                    placeholder="Enter payment amount"
+                                    value="{{negotiation.ad_request.ad_payment}}" name="new_payment">
                             </div>
-                        </div>
-                    </div>
-                    <!-- Flagged Influencers-->
-                    <div class="row">
-                        <div class="col">
-                            <div class="card shadow mb-3 mt-4">
-                                <div class="card-header py-3">
-                                    <p class="text-primary m-0 fw-bold">Influencers</p>
-                                </div>
-                                <div class="card-body">
-
-                                    {% if flagged_influencers|length > 0 %}
-                                    {% for influencer in flagged_influencers %}
-                                    <figure class="snip1527">
-                                        <div class="image">
-                                            {% if influencer.profile_picture %}
-                                            <img class="rounded-circle mb-3 mt-4"
-                                                src="{{ url_for('static', filename='uploads/' + influencer.profile_picture) }}">
-                                            {% else %}
-                                            <img class="rounded-circle mb-3 mt-4"
-                                                src="{{ url_for('static', filename='img/dogs/image2.jpeg') }}">
-                                            {% endif %}
-                                        </div>
-                                        <figcaption>
-                                            <div class="date"><span class="day"><i class="fas fa-eye"></i></span><span class="month">View</span>
-                                                <a href="/influencer/profile/{{influencer.id}}"></a></div>
-                                            <h3>{{ influencer.username }}</h3>
-                                            <p>{{ influencer.description_of_content }}</p>
-                                            <button class="btn btn-danger btn-sm" style="position: absolute; bottom: 10px; right: 50px;">
-                                                <i class="fas fa-trash"></i>
-                                                <a href="/admin/{{admin.id}}/delete/{{influencer.id}}"></a>
-                                            </button>
-                                            <!-- Flag/Report Button -->
-                                            <button class="btn btn-success btn-sm" style="position: absolute; bottom: 10px; right: 10px;">
-                                                <i class="fas fa-flag"></i>
-                                                <a href="/admin/{{admin.id}}/unflag/{{influencer.id}}"></a>
-                                            </button>
-                                        </figcaption>
-                                        
-                                    </figure>
-                                    {% endfor %}
-                                {% else %}
-                                    <p>No flagged influencers found.</p>
-                                {% endif %}
-
-
-
-                                    <figure class="snip1527">
-                                        <div class="image"><img
-                                                src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/pr-sample25.jpg"
-                                                alt="pr-sample25" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">01</span><span class="month">Dec</span>
-                                            </div>
-                                            <h3>Down with this sort of thing</h3>
-                                            <p>
-
-                                                I don't need to compromise my principles, because they don't have the
-                                                slightest bearing on
-                                                what happens to me anyway.
-                                            </p>
-                                        </figcaption>
-                                        <a href="#"></a>
-                                    </figure>
-
-                                </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="terms"><strong>Terms</strong></label>
+                                <textarea class="form-control" id="terms" rows="2" placeholder="Enter terms"
+                                    name="new_terms">
+                                    {{negotiation.ad_request.ad_terms}}
+                                </textarea>
                             </div>
-                        </div>
-                    </div>
 
+                        </div>
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number:</label>
+                            <input type="text" class="form-control" id="cardNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="expiryDate">Expiry Date:</label>
+                            <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV:</label>
+                            <input type="text" class="form-control" id="cvv" required>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-sm">Pay Now</button>
+                    </form>
+
+                    <!-- QR Code Payment -->
+                    <div id="qrCodeSection" style="display: none;">
+                        <h3>Scan this QR code to pay:</h3>
+                        <img id="qrCodeImage" src="#" alt="QR Code">
+                        <button type="button" class="btn btn-success mt-3 btn-sm" id="markAsPaid">Mark as Paid</button>
+                    </div>
                 </div>
-
-
             </div>
-            <footer class="bg-white sticky-footer">
-                <div class="container my-auto">
-                    <div class="text-center my-auto copyright"><span>Copyright © Brand 2024</span></div>
-                </div>
-            </footer>
-        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+        </div>
     </div>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bs-init.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#payByCard').click(function() {
+                $('#cardPaymentForm').show();
+                $('#qrCodeSection').hide();
+            });
+
+            $('#payByQR').click(function() {
+                $('#cardPaymentForm').hide();
+                $('#qrCodeSection').show();
+
+                $.ajax({
+                    url: '/generate_qr/{{ negotiation.id }}',
+                    method: 'GET',
+                    success: function(data) {
+                        $('#qrCodeImage').attr('src', data.qr_code_url);
+                    }
+                });
+            });
+
+            $('#markAsPaid').click(function() {
+                $.ajax({
+                    url: '/mark_as_paid/{{ negotiation.id }}',
+                    method: 'POST',
+                    success: function() {
+                        alert('Payment marked as paid.');
+                        $('#paymentModal').modal('hide');
+                    }
+                });
+            });
+        });
+    </script>
+        
+     
 </body>
 
 </html>

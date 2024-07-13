@@ -157,18 +157,18 @@
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow">
+
                                 <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link"
                                         aria-expanded="false" data-bs-toggle="dropdown" href="#"><span
-                                            class="d-none d-lg-inline me-2 text-gray-600 small">{{influencer.username}}</span>
-                                            {% if influencer.profile_picture %}
-                                            <img class="border rounded-circle img-profile"
-                                                src="{{ url_for('static', filename='uploads/' + influencer.profile_picture) }}">
-                                            {% else %}
-                                            <img class="border rounded-circle img-profile"
-                                                src="{{ url_for('static', filename='img/dogs/image2.jpeg') }}">
-                                            {% endif %}
-                                            
-                                        </a>
+                                            class="d-none d-lg-inline me-2 text-gray-600 small">{{sponsor.username}}</span>
+                                        {% if sponsor.company_logo %}
+                                        <img class="border rounded-circle img-profile"
+                                            src="{{ url_for('static', filename='uploads/' + sponsor.company_logo) }}">
+                                        {% else %}
+                                        <img class="border rounded-circle img-profile"
+                                            src="{{ url_for('static', filename='img/dogs/image2.jpeg') }}">
+                                        {% endif %}
+                                    </a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a
                                             class="dropdown-item" href="#"><i
                                                 class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a
@@ -186,220 +186,117 @@
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-4">Profile</h3>
-                    <div class="col">
-                        <div class="col">
-                            <div class="row ">
-                                <div class="col">
-                                    <div class="card mb-3 col">
-                                        <div class="card-body text-center shadow">
-                                            {% if influencer.profile_picture %}
-                                            <img class="rounded-circle mb-3 mt-4"
-                                                src="{{ url_for('static', filename='uploads/' + influencer.profile_picture) }}"
-                                                width="160" height="160" id="profileImage">
-                                            {% else %}
-                                            <img class="rounded-circle mb-3 mt-4"
-                                                src="{{ url_for('static', filename='img/dogs/image2.jpeg') }}"
-                                                width="160" height="160" id="profileImage">
-                                            {% endif %}
-                                            <p class="mt-2">Username: {{ influencer.username }}</p>
-                                            <p class="mt-1">Email: {{ influencer.email }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="card shadow mb-3">
-                                        <div class="card-header py-3">
-                                            <h6 class="text-primary fw-bold m-0">Platform Statistics</h6>
-                                        </div>
-                                        <div class="card-body">
-                                            <h4 class="small fw-bold">Instagram Followers<span
-                                                    class="float-end">{{follower_percent.instagram}}%</span></h4>
-                                            <div class="progress mb-4">
-                                                <div class="progress-bar bg-warning"
-                                                    aria-valuenow="{{follower_percent.instagram}}" aria-valuemin="0"
-                                                    aria-valuemax="100" style="width: {{follower_percent.instagram}}%;">
-                                                    <span class="visually-hidden">{{follower_percent.instagram}}%</span>
-                                                </div>
-                                            </div>
-                                            <h4 class="small fw-bold">Twitter Followers<span
-                                                    class="float-end">{{follower_percent.twitter}}%</span></h4>
-                                            <div class="progress mb-4">
-                                                <div class="progress-bar bg-danger"
-                                                    aria-valuenow="{{follower_percent.twitter}}" aria-valuemin="0"
-                                                    aria-valuemax="100" style="width: {{follower_percent.twitter}}%;">
-                                                    <span class="visually-hidden">{{follower_percent.twitter}}%</span>
-                                                </div>
-                                            </div>
-                                            <h4 class="small fw-bold">YouTube Subscribers<span
-                                                    class="float-end">{{follower_percent.youtube}}%</span></h4>
-                                            <div class="progress mb-4">
-                                                <div class="progress-bar bg-info"
-                                                    aria-valuenow="{{follower_percent.youtube}}" aria-valuemin="0"
-                                                    aria-valuemax="100" style="width: {{follower_percent.youtube}}%;">
-                                                    <span class="visually-hidden">{{follower_percent.youtube}}%</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    <h3 class="text-dark mb-4">Profile Settings</h3> {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    {{ messages[-1] }}
+                    {% endif %}
+                    {% endwith %}
+                    <div class="row mb-3">
 
+                        <div class="col-lg-8">
 
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- Pics  -->
-                    <div class="row">
-                        <div class="col">
-                            <div class="card shadow mb-3 mt-4">
+                            <div class="card shadow mb-3">
                                 <div class="card-header py-3">
-                                    <p class="text-primary m-0 fw-bold">Posts</p>
+                                    <p class="text-primary m-0 fw-bold">Company Profile Settings</p>
                                 </div>
                                 <div class="card-body">
-                                    {% if influencer.posts|length > 0 %}
-                                    {% for post in influencer.posts %}
-                                    <figure class="snip1527">
-                                        <!-- Dynamically generated posts go here -->
-                                        <div class="image"><img
-                                                src="{{ url_for('static', filename='uploads/' + post.media) }}"
-                                                alt="pr-sample23" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">{{ post.created_at.strftime('%d')
-                                                    }}</span><span class="month">{{ post.created_at.strftime('%b')
-                                                    }}</span>
+                                    <form action="/update/sponsorprofile/{{sponsor.id}}" method="post"
+                                        enctype="multipart/form-data">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="mb-3"><label class="form-label"
+                                                        for="username"><strong>Company Name</strong></label><input
+                                                        class="form-control" type="text"
+                                                        value="{{sponsor.company_name}}" name="company_name"></div>
                                             </div>
-                                            <h3>{{post.post}}</h3>
-                                            <p>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="mb-3"><label class="form-label"
+                                                        for="username"><strong>Username</strong></label><input
+                                                        class="form-control" type="text" value="{{sponsor.username}}"
+                                                        name="username"></div>
+                                            </div>
 
-                                                
-                                            </p>
-                                        </figcaption>
-                                    </figure>
-                                    <a href="#"></a>
-                                    {% endfor %}
+                                            <div class="col">
+                                                <div class="mb-3"><label class="form-label"
+                                                        for="username"><strong>Contact Person</strong></label><input
+                                                        class="form-control" type="text"
+                                                        value="{{sponsor.contact_person}}" name="contact_person"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="mb-3"><label class="form-label" for="email"><strong>Email
+                                                            Address</strong></label><input class="form-control"
+                                                        type="email" id="email" value="{{sponsor.email}}" name="email">
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="mb-3"><label class="form-label"
+                                                        for="phone_number"><strong>Phone Number</strong></label><input
+                                                        class="form-control" type="text" id="phone_number"
+                                                        value="{{sponsor.contact_number}}" name="contact_number"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <select class="form-control form-control-user rounded-pill"
+                                                id="exampleIndustry" name="industry">
+                                                <option value="{{sponsor.industry}}">{{sponsor.industry}}</option>
+                                                <option value="Technology">Technology</option>
+                                                <option value="Fashion">Fashion</option>
+                                                <option value="Food & Beverage">Food & Beverage</option>
+                                                <option value="Health & Wellness">Health & Wellness</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label" for="content_description"><strong>Company
+                                                    Description</strong></label>
+                                            <textarea class="form-control" id="content_description"
+                                                placeholder="Enter description"
+                                                name="company_description">{{sponsor.company_description}}</textarea>
+                                        </div>
+                                        <div class="mb-3"><label class="form-label"
+                                                for="portfolio_links"><strong>Company Website</strong></label><input
+                                                class="form-control" type="text" id="portfolio_links"
+                                                value="{{sponsor.company_website}}" name="company_website"></div>
+                                        <div class="mb-3"><button class="btn btn-primary btn-sm" type="submit">Save
+                                                Settings</button></div>
 
-                                    {% else %}
-                                    <p>No posts available.</p>
-                                    {% endif %}
                                 </div>
-                                <div class="card-body">
-                                    <figure class="snip1527">
-                                        <div class="image"><img
-                                                src="{{ url_for('static', filename='img/dogs/image2.jpeg') }}"
-                                                alt="pr-sample23" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">28</span><span class="month">Oct</span>
-                                            </div>
-                                            <h3>The World Ended Yesterday</h3>
-                                            <p>
+                            </div>
 
-                                                You know what we need, Hobbes? We need an attitude. Yeah, you can't be
-                                                cool if you don't
-                                                have an attitude.
-                                            </p>
-                                        </figcaption>
-                                        <a href="#"></a>
-                                    </figure>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card-body text-center shadow" style="padding-bottom: 2rem;">
+                                {% if sponsor.company_logo %}
+                                <img class="rounded-circle mb-3 mt-4"
+                                    src="{{ url_for('static', filename='uploads/' + sponsor.company_logo) }}"
+                                    width="160" height="160" id="profileImage">
+                                {% else %}
+                                <img class="rounded-circle mb-3 mt-4"
+                                    src="{{ url_for('static', filename='img/dogs/image2.jpeg') }}" width="160"
+                                    height="160" id="profileImage">
+                                {% endif %}
 
-                                    <figure class="snip1527">
-                                        <div class="image"><img
-                                                src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/pr-sample25.jpg"
-                                                alt="pr-sample25" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">01</span><span class="month">Dec</span>
-                                            </div>
-                                            <h3>Downthing</h3>
-                                            <p>
-
-                                                I
-                                            </p>
-                                        </figcaption>
-                                        <a href="#"></a>
-                                    </figure>
+                                <div class="mb-3">
+                                    <input type="file" name="company_logo" id="profilePhotoInput" style="display: none;"
+                                        onchange="document.getElementById('profileImage').src = window.URL.createObjectURL(this.files[0])">
+                                    <button class="btn btn-primary btn-sm" type="button"
+                                        onclick="document.getElementById('profilePhotoInput').click()">Change
+                                        Photo</button>
+                                    <!-- <div class="mb-3"><button class="btn btn-primary btn-sm mt-3" type="submit">Update profile pic</button></div> -->
 
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        </form>
 
-                    <!-- Ads by Influencer -->
-                    <div class="row">
-                        <div class="col">
-                            <div class="card shadow mb-3 mt-4">
-                                <div class="card-header py-3">
-                                    <p class="text-primary m-0 fw-bold">Ads By {{influencer.username}}</p>
-                                </div>
-                                <div class="card-body">
-                                    {% if influencer.ad_requests|length > 0 %}
-                                    {% for ad in influencer.ad_requests %}
-                                    <figure class="snip1527">
-                                        <!-- Dynamically generated posts go here -->
-                                        <div class="image"><img
-                                            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/pr-sample23.jpg"
-                                                alt="pr-sample23" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">{{ ad.created_at.strftime('%d')
-                                                    }}</span><span class="month">{{ ad.created_at.strftime('%b')
-                                                    }}</span>
-                                            </div>
-                                            <h3>{{ad.ad_name}}</h3>
-                                            <p>
-                                                {{ad.ad_description}}
-
-                                                
-                                            </p>
-                                        </figcaption>
-                                    </figure>
-                                    <a href="#"></a>
-                                    {% endfor %}
-
-                                    {% else %}
-                                    <p>No ads to show.</p>
-                                    {% endif %}
-                                </div>
-                                <div class="card-body">
-                                    <figure class="snip1527">
-                                        <div class="image"><img
-                                                src="{{ url_for('static', filename='img/dogs/image2.jpeg') }}"
-                                                alt="pr-sample23" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">28</span><span class="month">Oct</span>
-                                            </div>
-                                            <h3>The World Ended Yesterday</h3>
-                                            <p>
-
-                                                You know what we need, Hobbes? We need an attitude. Yeah, you can't be
-                                                cool if you don't
-                                                have an attitude.
-                                            </p>
-                                        </figcaption>
-                                        <a href="#"></a>
-                                    </figure>
-
-                                    <figure class="snip1527">
-                                        <div class="image"><img
-                                                src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/pr-sample25.jpg"
-                                                alt="pr-sample25" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">01</span><span class="month">Dec</span>
-                                            </div>
-                                            <h3>Downthing</h3>
-                                            <p>
-
-                                                I
-                                            </p>
-                                        </figcaption>
-                                        <a href="#"></a>
-                                    </figure>
-
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                 </div>
+
             </div>
             <footer class="bg-white sticky-footer">
                 <div class="container my-auto">

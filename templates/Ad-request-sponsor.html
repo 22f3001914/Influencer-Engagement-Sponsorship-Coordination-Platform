@@ -189,8 +189,8 @@
                                 <div class="card-body">
                                     <div class="row align-items-center no-gutters">
                                         <div class="col me-2">
-                                            <div class="text-uppercase text-primary fw-bold text-xs mb-1"><span>Campaign Price</span></div>
-                                            <div class="text-dark fw-bold h5 mb-0"><span>$40,000</span></div>
+                                            <div class="text-uppercase text-primary fw-bold text-xs mb-1"><span>Campaign Budget</span></div>
+                                            <div class="text-dark fw-bold h5 mb-0"><span>${{campaign.budget}}</span></div>
                                         </div>
                                         <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div>
                                     </div>
@@ -203,7 +203,7 @@
                                     <div class="row align-items-center no-gutters">
                                         <div class="col me-2">
                                             <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>Age Group</span></div>
-                                            <div class="text-dark fw-bold h5 mb-0"><span>18-24</span></div>
+                                            <div class="text-dark fw-bold h5 mb-0"><span>{{campaign.age_group}}</span></div>
                                         </div>
                                         <div class="col-auto"><i class="fas fa-users fa-2x text-gray-300"></i></div>
                                     </div>
@@ -219,9 +219,15 @@
                                                 <span>Platforms</span>
                                             </div>
                                             <div class="text-dark fw-bold h5 mb-0">
+                                                {% if campaign.platform_youtube%}
                                                 <i class="fab fa-youtube text-danger"></i>
+                                                {% endif %}
+                                                {% if campaign.platform_instagram%}
                                                 <i class="fab fa-instagram text-warning"></i>
+                                                {% endif %}
+                                                {% if campaign.platform_twitter%}
                                                 <i class="fab fa-twitter text-info"></i>
+                                                {% endif %}
                                             </div>
                                         </div>
                                         <div class="col-auto">
@@ -259,12 +265,23 @@
                                         </div>
                                         <div class="card-body">
                                             <ul class="list-group list-group-flush mb-4">
-                                                <li class="list-group-item">Campaign Name: <span class="text-muted">Example Campaign</span></li>
-                                                <li class="list-group-item">Target Age Group: <span class="text-muted">18-24</span></li>
-                                                <li class="list-group-item">Target Gender: <span class="text-muted">Any</span></li>
-                                                <li class="list-group-item">Campaign Price: <span class="text-muted">$1000</span></li>
-                                                <li class="list-group-item">Platforms: <span class="text-muted">YouTube, Instagram, Twitter</span></li>
-                                                <li class="list-group-item">Campaign Details: <span class="text-muted">This is a sample campaign detail text... Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium a temporibus excepturi quia officiis? Aperiam iusto suscipit error nam. Quo possimus amet iste corrupti fugiat blanditiis quibusdam nostrum vitae exercitationem!</span></li>
+                                                <li class="list-group-item">Campaign Name: <span class="text-muted">{{campaign.name}}</span></li>
+                                                <li class="list-group-item">Target Age Group: <span class="text-muted">{{campaign.age_group}}</span></li>
+                                                <li class="list-group-item">Target Gender: <span class="text-muted">{{campaign.gender}}</span></li>
+                                                <li class="list-group-item">Campaign Price: <span class="text-muted">${{campaign.budget}}</span></li>
+                                                <li class="list-group-item">Platforms: <span class="text-muted">
+                                                    {% if campaign.platform_youtube%}
+                                                <i class="fab fa-youtube text-danger"></i> Youtube
+                                                {% endif %}
+                                                {% if campaign.platform_instagram%} 
+                                                <i class="fab fa-instagram text-warning"></i> Instagram
+                                                {% endif %}
+                                                {% if campaign.platform_twitter%}
+                                                <i class="fab fa-twitter text-info"></i> Twitter
+                                                {% endif %}
+                                                  
+                                                </span></li>
+                                                <li class="list-group-item">Campaign Details: <span class="text-muted">{{campaign.details}}</span></li>
                                             </ul>
                                             <hr>
 
@@ -302,51 +319,40 @@
                     </div>
 
 
-
-                    <!-- Ads -->
-                    <div class="row">
-                        <div class="col">
-                            <div class="card shadow mb-3 mt-4">
-                                <div class="card-header py-3">
-                                    <p class="text-primary m-0 fw-bold">Adds</p>
-                                </div>
-                                <div class="card-body">
-                                    <figure class="snip1527">
-                                        <div class="image"><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/pr-sample23.jpg"
-                                                alt="pr-sample23" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">28</span><span class="month">Oct</span></div>
-                                            <h3>The World Ended Yesterday</h3>
-                                            <p>
-                    
-                                                You know what we need, Hobbes? We need an attitude. Yeah, you can't be cool if you don't
-                                                have an attitude.
-                                            </p>
-                                        </figcaption>
-                                        <a href="#"></a>
-                                    </figure>
-                                    
-                                    <figure class="snip1527">
-                                        <div class="image"><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/pr-sample25.jpg"
-                                                alt="pr-sample25" /></div>
-                                        <figcaption>
-                                            <div class="date"><span class="day">01</span><span class="month">Dec</span></div>
-                                            <h3>Down with this sort of thing</h3>
-                                            <p>
-                    
-                                                I don't need to compromise my principles, because they don't have the slightest bearing on
-                                                what happens to me anyway.
-                                            </p>
-                                        </figcaption>
-                                        <a href="#"></a>
-                                    </figure>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
+<!-- Ads -->
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-3 mt-4">
+            <div class="card-header py-3">
+                <p class="text-primary m-0 fw-bold">Ads</p>
+            </div>
+            <div class="card-body">
+                {% for ad in campaign.ad_requests %}
+                <figure class="snip1527">
+                    <div class="image"><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/pr-sample23.jpg" alt="Ad Image" /></div>
+                    <figcaption>
+                        <div class="date"><span class="day">{{ ad.created_at.strftime('%d') }}</span><span class="month">{{ ad.created_at.strftime('%b') }}</span></div>
+                        <h3>{{ ad.ad_name }}</h3>
+                        <p>{{ ad.ad_description }}</p>
+                        <!-- Badge for ad status -->
+                        {% if ad.status == 'pending' %}
+                        <span class="badge bg-warning">Pending</span>
+                        {% elif ad.status == 'negotiating' %}
+                        <span class="badge bg-info">Negotiating</span>
+                        {% elif ad.status == 'completed' %}
+                        <span class="badge bg-success">Completed</span>
+                        {% elif ad.status == 'ongoing' %}
+                        <span class="badge bg-primary">Ongoing</span>
+                        {% endif %}
+                    </figcaption>
+                    <a href="/assigninfluencer/{{ad.id}}"></a>
+                </figure>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+           
 
                     <!-- Add new ad -->
                     <div class="row">
@@ -356,30 +362,42 @@
                                     <p class="text-primary m-0 fw-bold">Add New Ad Request</p>
                                 </div>
                                 <div class="card-body">
-                                    <form id="newAdRequestForm">
+                                    <form id="newAdRequestForm" action="/addadvt/{{campaign.id}}" method="post">
                                         <div class="mb-3">
                                             <label class="form-label" for="adName"><strong>Ad Name</strong></label>
-                                            <input type="text" class="form-control" id="adName" placeholder="Enter ad name">
+                                            <input type="text" class="form-control" id="adName" placeholder="Enter ad name" name="ad_name">
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label" for="description"><strong>Description</strong></label>
-                                            <textarea class="form-control" id="description" rows="3" placeholder="Enter description"></textarea>
+                                            <textarea class="form-control" id="description" rows="3" placeholder="Enter description" name="ad_description"></textarea>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label" for="terms"><strong>Terms</strong></label>
-                                            <textarea class="form-control" id="terms" rows="2" placeholder="Enter terms"></textarea>
+                                            <textarea class="form-control" id="terms" rows="2" placeholder="Enter terms" name="ad_terms"></textarea>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label" for="payment"><strong>Payment</strong></label>
-                                            <input type="number" class="form-control" id="payment" placeholder="Enter payment amount">
+                                            <input type="number" class="form-control" id="payment" placeholder="Enter payment amount" name="ad_payment">
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label" for="influencerAssigned"><strong>Influencer Assigned</strong></label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" id="influencerAssigned" placeholder="Enter influencer name">
-                                                <button type="button" class="btn btn-primary" id="findInfluencerBtn">Find Influencer</button>
-                                            </div>
-                                        </div>
+                                            <label class="form-label" for="platform"><strong>Platform</strong></label>
+                                            <select class="form-control" id="platform" name="ad_platform">
+                                              {% if campaign.platform_youtube %}
+                                                <option value="youtube">YouTube</option>
+                                              {% endif %}
+                                              {% if campaign.platform_facebook %}
+                                                <option value="facebook">Facebook</option>
+                                              {% endif %}
+                                              {% if campaign.platform_instagram %}
+                                                <option value="instagram">Instagram</option>
+                                              {% endif %}
+                                              {% if campaign.platform_twitter %}
+                                                <option value="twitter">Twitter</option>
+                                              {% endif %}
+                                            </select>
+                                          </div>
+
+
                                         <div class="mb-3">
                                             
                                             <button type="submit" class="btn btn-primary" id="addAdRequestBtn">Create new Ad</button>

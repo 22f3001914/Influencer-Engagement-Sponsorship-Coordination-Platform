@@ -1,138 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Influencer Profile</title>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    .profile-header {
-      display: flex;
-      align-items: center;
-      padding: 20px;
-    }
-    .profile-image {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      overflow: hidden;
-      margin-right: 20px;
-    }
-    .profile-stats {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 600px;
-    }
-    .profile-stats div {
-      text-align: center;
-    }
-    .profile-bio {
-      margin-top: 10px;
-    }
-    .profile-posts {
-      display: flex;
-      flex-wrap: wrap;
-    }
-    .profile-post {
-      width: calc(33.333% - 20px);
-      margin: 10px;
-      overflow: hidden;
-    }
-    .profile-post img {
-      width: 100%;
-    }
-    .social-stats {
-      margin-top: 20px;
-    }
-    .social-stats .card {
-      margin-bottom: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencer Account Registration</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-section {
+            margin-bottom: 20px;
+        }
+        .form-section h5 {
+            margin-bottom: 15px;
+        }
+        .form-control-user {
+            margin-bottom: 15px;
+        }
+        .custom-checkbox {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="profile-header">
-    <div class="profile-image">
-      <img src="https://via.placeholder.com/150" alt="Profile Picture">
-    </div>
-    <div>
-      <h2>Username</h2>
-      <div class="profile-stats">
-        <div>
-          <strong>150</strong><br>
-          Posts
-        </div>
-        <div>
-          <strong>300k</strong><br>
-          Followers
-        </div>
-        <div>
-          <strong>200</strong><br>
-          Following
-        </div>
-      </div>
-      <div class="profile-bio">
-        <p>Bio text goes here. You can include hashtags, links, and other relevant information.</p>
-      </div>
-    </div>
-  </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <div class="p-5">
+                        <div class="text-center">
+                            <h4 class="text-dark mb-4">Influencer Account Registration</h4>
+                        </div>
+                        <form class="user">
+                            <div class="form-section">
+                                <h5 class="text-dark">Personal Information:</h5>
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-user" id="fullName" placeholder="Full Name">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="email" class="form-control form-control-user" id="emailAddress" placeholder="Email Address">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="tel" class="form-control form-control-user" id="phoneNumber" placeholder="Phone Number">
+                                </div>
+                                <div class="form-group">
+                                    <input type="date" class="form-control form-control-user" id="dateOfBirth" placeholder="Date of Birth">
+                                </div>
+                            </div>
 
-  <div class="social-stats row">
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-body text-center">
-          <h5 class="card-title">Instagram</h5>
-          <p class="card-text"><strong>Username:</strong> @instagram_user</p>
-          <p class="card-text"><strong>Followers:</strong> 500k</p>
-          <p class="card-text"><strong>Posts:</strong> 300</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-body text-center">
-          <h5 class="card-title">Twitter</h5>
-          <p class="card-text"><strong>Username:</strong> @twitter_user</p>
-          <p class="card-text"><strong>Followers:</strong> 200k</p>
-          <p class="card-text"><strong>Tweets:</strong> 1,500</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-body text-center">
-          <h5 class="card-title">YouTube</h5>
-          <p class="card-text"><strong>Channel:</strong> YouTube Channel</p>
-          <p class="card-text"><strong>Subscribers:</strong> 1M</p>
-          <p class="card-text"><strong>Videos:</strong> 100</p>
-        </div>
-      </div>
-    </div>
-  </div>
+                            <div class="form-section">
+                                <h5 class="text-dark">Social Media Handles and Metrics:</h5>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" id="instagramHandle" placeholder="Instagram Handle">
+                                    <input type="number" class="form-control form-control-user" id="instagramFollowerCount" placeholder="Instagram Follower Count">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" id="twitterHandle" placeholder="Twitter Handle">
+                                    <input type="number" class="form-control form-control-user" id="twitterFollowerCount" placeholder="Twitter Follower Count">
+                                </div>
+                                <div class="form-group">
+                                    <input type="url" class="form-control form-control-user" id="youtubeChannelLink" placeholder="YouTube Channel Link">
+                                    <input type="number" class="form-control form-control-user" id="youtubeSubscriberCount" placeholder="YouTube Subscriber Count">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" id="otherSocialMedia" placeholder="Other Social Media Platforms (Specify)">
+                                </div>
+                            </div>
 
-  <div class="profile-posts">
-    <div class="profile-post">
-      <img src="https://via.placeholder.com/300" alt="Post 1">
+                            <div class="form-section">
+                                <h5 class="text-dark">Content and Niche:</h5>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" id="primaryContentCategories" placeholder="Primary Content Categories/Niches">
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="form-control form-control-user" id="descriptionOfContent" placeholder="Description of Content Style and Themes"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h5 class="text-dark">Engagement Metrics:</h5>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" id="averageLikesCommentsPerPost" placeholder="Average Likes/Comments per Post">
+                                    <input type="text" class="form-control form-control-user" id="engagementRate" placeholder="Engagement Rate">
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h5 class="text-dark">Demographics and Audience:</h5>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" id="primaryAudienceDemographics" placeholder="Primary Audience Demographics (Age, Gender, Location)">
+                                    <input type="text" class="form-control form-control-user" id="audienceInterests" placeholder="Audience Interests">
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h5 class="text-dark">Collaboration Preferences:</h5>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" id="typesOfCollaborationsInterestedIn" placeholder="Types of Collaborations Interested In">
+                                    <textarea class="form-control form-control-user" id="previousBrandCollaborations" placeholder="Previous Brand Collaborations and Examples of Work"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h5 class="text-dark">Availability and Schedule:</h5>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" id="bestTimesForContact" placeholder="Best Times for Contact">
+                                    <input type="text" class="form-control form-control-user" id="availabilityForCampaigns" placeholder="Availability for Campaigns">
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h5 class="text-dark">Additional Information:</h5>
+                                <div class="form-group">
+                                    <input type="file" class="form-control form-control-user" id="mediaKitUpload">
+                                    <textarea class="form-control form-control-user" id="bioShortDescription" placeholder="Bio/Short Description"></textarea>
+                                    <input type="url" class="form-control form-control-user" id="linksToPortfolioOrWebsite" placeholder="Links to Portfolio or Website">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox small">
+                                    <input type="checkbox" class="custom-control-input" id="agreementToTerms">
+                                    <label class="custom-control-label" for="agreementToTerms">Agreement to Terms and Conditions</label>
+                                </div>
+                                <div class="custom-control custom-checkbox small">
+                                    <input type="checkbox" class="custom-control-input" id="consentToShare">
+                                    <label class="custom-control-label" for="consentToShare">Consent to Share Contact Information with Brands</label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-user btn-block">
+                                Register Account
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="profile-post">
-      <img src="https://via.placeholder.com/300" alt="Post 2">
-    </div>
-    <div class="profile-post">
-      <img src="https://via.placeholder.com/300" alt="Post 3">
-    </div>
-    <div class="profile-post">
-      <img src="https://via.placeholder.com/300" alt="Post 4">
-    </div>
-    <div class="profile-post">
-      <img src="https://via.placeholder.com/300" alt="Post 5">
-    </div>
-    <div class="profile-post">
-      <img src="https://via.placeholder.com/300" alt="Post 6">
-    </div>
-    <!-- Add more posts as needed -->
-  </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
