@@ -1,0 +1,138 @@
+{% extends "influencer-base.html" %}
+
+{% block title %} Find Campaigns {% endblock %}
+{% block active_dashboard %} {% endblock %}
+{% block active_campaign %} {% endblock %}
+{% block active_find %} active {% endblock %}
+{% block active_stats %} {% endblock %}
+{% block active_logout %} {% endblock %}
+{% block main_header %} {% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+    <h3 class="text-dark mb-4">Ad Negotiation</h3>
+
+    <!-- Negotiation Details -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow mb-3 mt-4">
+                <div class="card-header py-3">
+                    <p class="text-primary m-0 fw-bold">Negotiation Chat</p>
+                </div>
+                
+                <div class="card-body">
+                    {% if negotiation %}
+                    <!-- Company Details Section -->
+                    <div class="company-details mb-4">
+                        <img src="path/to/company-logo.png" alt="Company Logo"
+                            style="width: 50px; height: 50px; border-radius: 50%;">
+                        <h5 class="d-inline-block ml-3">{{negotiation.ad_request.campaign.name}}</h5>
+                    </div>
+                    <!-- Chat Box -->
+                    <div class="chat-box">
+                        
+                        <!-- Messages will be dynamically inserted here -->
+                        {% for message in negotiation.messages %}
+                        <div class="chat-message {{message.sender}}">
+                            <span class="chat-date">{{message.sent_at}}</span>
+                            <!-- <h5 class="chat-user">{{message.sender}}</h5> -->
+                            <p class="chat-text">{{message.content}}</p>
+                        </div>
+                        {% endfor %}
+                        <!-- Add more messages here -->
+                        {% if negotiation.status == 'accepted' %}
+                        <div class="chat-message sponsor">
+                            <h5 class="chat-user">
+                                Congratulations!! Your negotiation just got accepted at
+                                RS. {{negotiation.ad_request.ad_payment}} with terms: {{negotiation.ad_request.ad_terms}}
+
+                            </h5>
+
+                        </div>
+                        {% elif negotiation.status == 'rejected' %}
+                        <div class="chat-message sponsor">
+                            <h5 class="chat-user">
+                                Your negotiation is rejected.
+                            </h5>
+                        </div>
+                        {% elif negotiation.status == 'withdrawn' %}
+                        <div class="chat-message sponsor">
+                            <h5 class="chat-user">
+                                Ad Request is  withdraw.
+                            </h5>
+                        </div>
+                        
+                        {% endif %}
+
+
+
+
+                    </div>
+                    {% else %}
+                    <p>No negotiation found</p>
+                    {% endif %}
+                    <!-- Chat Input -->
+                    {% if negotiation.status == 'negotiating' or negotiation.status == 'accepted' %}
+                    <div class="chat-input">
+
+                        <form action="/negotiateinfluencer/{{negotiation.id}}" method="post">
+                            <textarea class="form-control" placeholder="Type your message here..."
+                                name="message"></textarea>
+                            <button type="submit" class="btn btn-primary send-btn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+
+                        </form>
+
+                    </div>
+                    {% else %}
+                    <p>Ad Requested {{negotiation.status}} </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% if negotiation.status == 'accepted' %}
+        <div class="col-lg-4">
+            <div class="card shadow mb-3 mt-4">
+                <div class="card-header py-3">
+                    <p class="text-primary m-0 fw-bold">Update Progress</p>
+                </div>
+                <div class="card-body">
+                   
+                    <form action="/updateprogress/{{negotiation.id}}/{{negotiation.ad_request_id}}"
+                        method="post">
+                        <div class="mb-3">
+                            <label class="form-label" for="progress_percent"><strong>Progresss Percent</strong></label>
+                            <input type="number" class="form-control" id="progress_percent"
+                                placeholder="Enter progress percent"
+                                value="{{negotiation.ad_request.progress_percent}}" name="progress_percent">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="ad_remarks"><strong>Remarks (if any) </strong></label>
+                            <textarea class="form-control" id="ad_remarks" rows="2" placeholder="Enter remarks"
+                                name="ad_remarks">
+                                {{negotiation.ad_request.ad_remarks}}
+                            </textarea>
+                        </div>
+                        <div class="d-flex">
+                            <button type="submit" class="btn btn-primary btn-sm">Update Progress</button>
+                            <a href="/markascompleted/{{negotiation.id}}/{{negotiation.ad_request_id}}" class="btn btn-success btn-sm" style="color: white;">
+                                <i class="fas fa-check"></i> Mark as Complete
+                            </a>
+                        </div>
+                        
+                    </form>
+
+                    
+
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+
+</div>
+{% endblock %}

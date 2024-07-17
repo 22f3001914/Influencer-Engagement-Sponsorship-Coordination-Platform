@@ -8,6 +8,7 @@ class Admin(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     phone = db.Column(db.String(120), unique=True, nullable=False)
     role = db.Column(db.String(120), unique=False, nullable=False)
+ # Path to profile picture
 
 class Influencer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,6 +72,11 @@ class Campaign(db.Model):
     sponsor = db.relationship('Sponsor', backref=db.backref('campaigns', lazy=True))
     ad_requests = db.relationship('AdRequest', backref='campaign', lazy=True)
     isflagged = db.Column(db.Boolean, default=False)
+    campaign_picture = db.Column(db.String(255), nullable=True)
+    start_date = db.Column(db.DateTime, nullable=False)
+    end_date = db.Column(db.DateTime, nullable=False)
+
+    # I need a section for campaign images
 
 class AdRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)

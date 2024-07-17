@@ -2,7 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for, flash, sen
 from flask import current_app as app
 from .models import * 
 import os
-
+import qrcode
+from io import BytesIO
+from PIL import Image, ImageDraw, ImageFont
+from datetime import datetime
 
 #App related routes
 @app.route('/login')
@@ -10,11 +13,12 @@ def login():
     return render_template('login.html')
 
 
-# Admin Related Routes
 @app.route('/')
 def home():
     return render_template('landing.html')
 
+
+# Admin Related Routes
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
@@ -35,6 +39,8 @@ def admin_login():
             return redirect(url_for('admin_dashboard', id=admin.id))
 
     return render_template('login-admin.html')
+
+
 @app.route('/admin/<int:admin_id>/flag/<int:influencer_id>')
 def flag_influencer(admin_id, influencer_id):
     influencer = Influencer.query.get(influencer_id)
@@ -50,39 +56,84 @@ def unflag_influencer(admin_id, influencer_id):
     influencer.isflagged = False
     db.session.commit()
     flash('Influencer unflagged successfully!', 'success')
-    return redirect(url_for('admin_find', id=admin_id))
+    return redirect(url_for('admin_dashboard', id=admin_id))
 
 @app.route('/admin/<int:admin_id>/delete/<int:influencer_id>')
 def delete_influencer(admin_id, influencer_id):
     posts = InfluencerPosts.query.filter_by(influencer_id=influencer_id).all()
-    for post in posts:
-        if post.media:
-            os.remove(f'./static/uploads/{post.media}')
-        db.session.delete(post)
-    
+    if posts:
+        for post in posts:
+            if post.media:
+                os.remove(f'./static/uploads/{post.media}')
+            db.session.delete(post)
+    negotiations = Negotiation.query.filter_by(influencer_id=influencer_id).all()
+    if negotiations:
+        for negotiation in negotiations:
+            messages = Message.query.filter_by(negotiation_id=negotiation.id).all()
+            for message in messages:
+                db.session.delete(message)
+            db.session.delete(negotiation)
+   
+    ad_requests = AdRequest.query.filter_by(influencer_id=influencer_id).all()
+    for ad_request in ad_requests:
+        db.session.delete(ad_request)
+
     influencer = Influencer.query.get(influencer_id)
     db.session.delete(influencer)
     db.session.commit()
     flash('Influencer deleted successfully!', 'success')
-    return redirect(url_for('admin_find', id=admin_id))
-@app.route('/admin/dashboard/<int:id>')
+    return redirect(url_for('admin_dashboard', id=admin_id))
+
+
+@app.route('/admin/<int:id>/dashboard')
 def admin_dashboard(id):
     admin = Admin.query.get(id)
     campaigns = Campaign.query.all()
     influencers = Influencer.query.all()
-    return render_template('dashboard-admin.html', admin=admin, campaigns=campaigns, influencers=influencers)
+    sponsors = Sponsor.query.all()
+    ad_requests = AdRequest.query.all()
+    return render_template('dashboard-admin.html', admin=admin, campaigns=campaigns, influencers=influencers, sponsors=sponsors, ad_requests=ad_requests)
 
-@app.route('/admin/find/<int:id>')
+@app.route('/admin/<int:id>/find')
 def admin_find(id):
     admin = Admin.query.get(id)
     influencers = Influencer.query.all()
-    return render_template('find-admin.html', admin=admin, influencers=influencers)
+    campaigns = Campaign.query.all()
+    return render_template('find-admin.html', admin=admin, influencers=influencers, campaigns=campaigns)
     # return render_template('find-admin.html')
 
-@app.route('/admin/stats')
-def admin_stats():
-    return render_template('stats.html')
+@app.route('/admin/<int:id>/stats')
+def admin_stats(id):
+    admin = Admin.query.get(id)
 
+    return render_template('stats-admin.html', admin=admin)
+
+@app.route('/admin/<int:id>/logout', methods=['GET'])
+def admin_logout(id):
+    return redirect(url_for('home'))  
+
+@app.route('/admin/<int:admin_id>/unflagcampaign/<int:campaign_id>', methods=['GET', 'POST'])
+def unflag_campaign(admin_id, campaign_id):
+    campaign = Campaign.query.get(campaign_id)
+    campaign.isflagged = False
+    db.session.commit()
+    flash('Campaign unflagged successfully!', 'success')
+    return redirect(url_for('admin_dashboard', id=admin_id))
+@app.route('/admin/<int:admin_id>/flagcampaign/<int:campaign_id>', methods=['GET', 'POST'])
+def flag_campaign(admin_id, campaign_id):
+    campaign = Campaign.query.get(campaign_id)
+    campaign.isflagged = True
+    db.session.commit()
+    flash('Campaign flagged successfully!', 'success')
+    return redirect(url_for('admin_find', id=admin_id))
+
+@app.route('/admin/<int:admin_id>/unflagsponsor/<int:sponsor_id>', methods=['GET', 'POST'])
+def unflag_sponsor(admin_id, sponsor_id):
+    sponsor = Sponsor.query.get(sponsor_id)
+    sponsor.isflagged = False
+    db.session.commit()
+    flash('Sponsor unflagged successfully!', 'success')
+    return redirect(url_for('admin_dashboard', id=admin_id))
 
 
 # Sponsor Related Routes
@@ -108,7 +159,28 @@ def sponsor_register():
         return redirect(url_for('sponsor_dashboard', sponsor_id=sponsor.id))
     return render_template('register-sponsor.html')
 
-@app.route('/update/sponsorprofile/<int:id>', methods=['GET', 'POST'])
+@app.route('/login/sponsor', methods=['GET', 'POST'])
+def sponsor_login():
+    if request.method == 'POST':
+        flash('Incorrect username or password!', 'error')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        sponsor = Sponsor.query.filter_by(username=username).first()
+        if not sponsor:
+            print('User does not exit!')
+            flash('User does not exit!', 'error')
+            return redirect(url_for('sponsor_login'))
+        elif sponsor.password != password:
+            print("Incorrect password!")
+            flash('Incorrect username or password!', 'error')
+            return redirect(url_for('sponsor_login'))
+        else:
+            flash('Login successful!', 'success')
+            return redirect(url_for('sponsor_dashboard', sponsor_id=sponsor.id))
+
+    return render_template('login-sponsor.html')
+
+@app.route('/sponsor/<int:id>/profilesettings', methods=['GET', 'POST'])
 def update_sponsor_profile(id):
     sponsor = Sponsor.query.get(id)
     if request.method == 'POST':
@@ -133,28 +205,34 @@ def update_sponsor_profile(id):
         return redirect(url_for('update_sponsor_profile', id=sponsor.id))
     return render_template('profile-setting-sponsor.html', sponsor=sponsor)
 
-@app.route('/sponsor/profile/<int:id>')
+@app.route('/sponsor/<int:id>/profile')
 def sponsor_profile(id):
     sponsor = Sponsor.query.get(id)
     return render_template('profile-sponsor.html', sponsor=sponsor)
 
-@app.route('/sponsor/dashboard/<int:sponsor_id>')
+@app.route('/sponsor/<int:sponsor_id>/dashboard')
 def sponsor_dashboard(sponsor_id):
     sponsor = Sponsor.query.get(sponsor_id)
     return render_template('dashboard-sponsor.html', sponsor = sponsor)
 
-@app.route('/sponsor/find')
-def sponsor_find():
-    return render_template('find-sponsor.html')
+@app.route('/sponsor/<int:sponsor_id>/find')
+def sponsor_find(sponsor_id):
+    sponsor = Sponsor.query.get(sponsor_id)
+    campaigns = Campaign.query.all()
+    influencers = Influencer.query.all()
+    return render_template('find-sponsor.html', sponsor=sponsor, influencers=influencers, campaigns=campaigns)
 
-@app.route('/sponsor/stats')
-def sponsor_stats():
-    return render_template('stats.html')
+@app.route('/sponsor/<int:sponsor_id>/stats')
+def sponsor_stats(sponsor_id):
+    sponsor = Sponsor.query.get(sponsor_id)
+    return render_template('stats-sponsor.html', sponsor=sponsor)
 
 @app.route('/campaign/<int:campaign_id>/ad')
 def sponsor_ad_request(campaign_id):
     campaign = Campaign.query.get(campaign_id)
-    return render_template('Ad-request-sponsor.html', campaign=campaign)
+    sponsor = campaign.sponsor
+    return render_template('Ad-request-sponsor.html', campaign=campaign, sponsor=sponsor)
+
 
 @app.route('/sponsor/<int:sponsor_id>/campaign', methods=['GET', 'POST'])  
 def sponsor_campaigns(sponsor_id):
@@ -164,6 +242,14 @@ def sponsor_campaigns(sponsor_id):
         age_group = request.form.get('age_group')
         gender = request.form.get('gender')
         budget = request.form.get('campaign_budget')
+        # Assuming 'start_date' and 'end_date' are in 'YYYY-MM-DD' format
+        start_date_str = request.form.get('start_date')
+        end_date_str = request.form.get('end_date')
+
+        # Convert string dates to datetime.date objects
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date() if start_date_str else None
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date() if end_date_str else None
+
         platforms = request.form.getlist('platforms')
         if 'youtube' in platforms:
             platform_youtube = True
@@ -183,13 +269,14 @@ def sponsor_campaigns(sponsor_id):
             visibility = True
         else:
             visibility = False
-        campaign = Campaign(name=name, details=details, age_group = age_group,gender = gender, budget = budget, platform_youtube = platform_youtube, platform_instagram = platform_instagram, platform_twitter = platform_twitter, visibility = visibility, sponsor_id = sponsor_id)
+        campaign = Campaign(name=name, details=details, age_group = age_group,gender = gender, budget = budget, platform_youtube = platform_youtube, platform_instagram = platform_instagram, platform_twitter = platform_twitter, visibility = visibility, sponsor_id = sponsor_id, start_date = start_date, end_date = end_date)
         db.session.add(campaign)
         db.session.commit()
         flash('Campaign added successfully!', 'success')
         return redirect(url_for('sponsor_campaigns', sponsor_id=sponsor_id))
     sponsor = Sponsor.query.get(sponsor_id)
     return render_template('campaigns-sponsor.html', sponsor=sponsor)
+
 
 @app.route('/sponsor/<int:sponsor_id>/updatecampaign/<int:campaign_id>', methods=['GET', 'POST'])
 def update_campaign(sponsor_id, campaign_id):
@@ -262,7 +349,7 @@ def assign_influencer(ad_id):
     elif platform == 'youtube':
         platform_specific_influencers = Influencer.query.filter(Influencer.youtube_channel_link != None).all()
     influencers = Influencer.query.all()
-    return render_template('find-sponsor.html', ad_request=ad_request, influencers=influencers, relevant_influencers=platform_specific_influencers, )
+    return render_template('select-influencer-by-sponsor.html', ad_request=ad_request, influencers=influencers, relevant_influencers=platform_specific_influencers, )
 
 
 @app.route('/request/<int:influencer_id>/<int:ad_id>')
@@ -272,7 +359,7 @@ def request_influencer(influencer_id, ad_id):
     if ad_request.negotiation:
         existing_negotiations = ad_request.negotiation  
     for negotiation in existing_negotiations:
-        if negotiation.influencer_id == influencer_id and negotiation.status == 'negotiating':
+        if negotiation.influencer_id == influencer_id and negotiation.status in ('requested_by_sponsor', 'negotiating') :
             flash('Influencer already requested!', 'error')
             print('Influencer already requested!')
             return redirect(url_for('assign_influencer', ad_id=ad_id))
@@ -281,7 +368,7 @@ def request_influencer(influencer_id, ad_id):
             print('Influencer already assigned!')
             return redirect(url_for('assign_influencer', ad_id=ad_id))
         elif negotiation.influencer_id == influencer_id and negotiation.status == 'rejected':
-            negotiation.status = 'negotiating'
+            negotiation.status = 'requested_by_sponsor'
             negotiation.updated_at = db.func.now()
             db.session.commit()
             flash('Influencer requested successfully!', 'success')
@@ -296,6 +383,41 @@ def request_influencer(influencer_id, ad_id):
     
     return redirect(url_for('assign_influencer', ad_id=ad_id))
 
+@app.route('/requestad/<int:influencer_id>/<int:ad_id>')
+def requestad_influencer(influencer_id, ad_id):
+    ad_request = AdRequest.query.get(ad_id)
+    influencer = Influencer.query.get(influencer_id)
+    if ad_request in influencer.ad_requests :
+        negotiaton = Negotiation.query.filter_by(ad_request_id=ad_id, influencer_id=influencer_id).first()
+        if negotiaton.status == 'requested_by_influencer':
+            flash('Ad already requested!', 'error')
+            return redirect(url_for('view_ads', influencer_id = influencer_id, campaign_id = ad_request.campaign_id))
+        elif negotiaton.status == 'accepted':
+            flash('Ad already assigned!', 'error')
+            return redirect(url_for('view_ads', influencer_id = influencer_id, campaign_id = ad_request.campaign_id))
+        elif negotiaton.status == 'rejected':
+            negotiaton.status = 'requested_by_influencer'
+            negotiaton.updated_at = db.func.now()
+            db.session.commit()
+            flash('Ad requested successfully!', 'success')
+    else:
+        negotiation = Negotiation(ad_request_id=ad_id, influencer_id=influencer_id, status = 'requested_by_influencer')
+        db.session.add(negotiation)
+        db.session.commit()
+        flash('Ad requested successfully!', 'success') 
+
+    
+    return redirect(url_for('view_ads', influencer_id = influencer_id, campaign_id = ad_request.campaign_id))
+
+
+@app.route('/request/<int:influencer_id>/<int:sponsor_id>', methods=['GET', 'POST'])
+def request_influencer_from_find(influencer_id, sponsor_id):
+    if request.method == 'POST':
+        ad_id = request.form.get('ad_id')
+        if not ad_id:
+            flash('Ad ID is required!', 'error')
+            return redirect(url_for('sponsor_find', sponsor_id=sponsor_id))
+        return redirect(url_for('request_influencer', influencer_id=influencer_id, ad_id=ad_id))
 
 
 #Influencer Related Routes
@@ -318,9 +440,29 @@ def influencer_register():
         return render_template('profile-setting.html' , influencer=influencer)
     return render_template('register-influencer.html')
 
-from datetime import datetime
 
-@app.route('/update/profile/<int:id>', methods=['GET', 'POST'])
+
+@app.route('/login/influencer', methods=['GET', 'POST'])
+def influencer_login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        influencer = Influencer.query.filter_by(username=username).first()
+        if not influencer:
+            print('User does not exit!')
+            flash('User does not exit!', 'error')
+            return redirect(url_for('influencer_login'))
+        elif influencer.password != password:
+            print("Incorrect password!")
+            flash('Incorrect username or password!', 'error')
+            return redirect(url_for('influencer_login'))
+        else:
+            flash('Login successful!', 'success')
+            return redirect(url_for('influencer_dashboard', influencer_id=influencer.id))
+
+    return render_template('login-influencer.html')
+
+@app.route('/influencer/<int:id>/profilesettings', methods=['GET', 'POST'])
 def update_profile(id):
     influencer = Influencer.query.get(id)
     if request.method == 'POST':
@@ -356,28 +498,38 @@ def update_profile(id):
 
 
 
-@app.route('/influencer/dashboard')
-def influencer_dashboard():
-    return render_template('dashboard-influencer.html')
+@app.route('/influencer/<int:influencer_id>/dashboard')
+def influencer_dashboard( influencer_id):
+    influencer = Influencer.query.get(influencer_id)
+    return render_template('dashboard-influencer.html', influencer=influencer)
 
-@app.route('/influencer/find')
-def influencer_find():
-    return render_template('find-influencer.html')
+@app.route('/influencer/<int:influencer_id>/find')
+def influencer_find(influencer_id):
+    influencer = Influencer.query.get(influencer_id)
+    campaigns = Campaign.query.all()
+    return render_template('find-influencer.html', influencer=influencer, campaigns=campaigns)
 
-@app.route('/influencer/stats')
-def influencer_stats():
-    return render_template('stats.html')
+@app.route('/influencer/<int:id>/stats')
+def influencer_stats(id):
+    influencer = Influencer.query.get(id)
+    return render_template('stats-influencer.html', influencer=influencer)
 
-@app.route('/influencer/profile/<int:id>')
+@app.route('/influencer/<int:id>/profile')
 def influencer_profile(id):
     influencer = Influencer.query.get(id)
-    followers = influencer.instagram_follower_count + influencer.twitter_follower_count + influencer.youtube_subscriber_count
-    if followers == 0:
-        followers = 1
+    # Ensure counts default to 0 if None
+    instagram_follower_count = influencer.instagram_follower_count if influencer.instagram_follower_count is not None else 0
+    twitter_follower_count = influencer.twitter_follower_count if influencer.twitter_follower_count is not None else 0
+    youtube_subscriber_count = influencer.youtube_subscriber_count if influencer.youtube_subscriber_count is not None else 0
+
+    followers = instagram_follower_count + twitter_follower_count + youtube_subscriber_count
+    # Avoid division by zero by ensuring followers is at least 1
+    followers = max(followers, 1)
+
     follower_percent = {
-        'instagram': round(influencer.instagram_follower_count / followers * 100),
-        'twitter': round(influencer.twitter_follower_count / followers * 100),
-        'youtube': round(influencer.youtube_subscriber_count / followers * 100)
+        'instagram': round(instagram_follower_count / followers * 100),
+        'twitter': round(twitter_follower_count / followers * 100),
+        'youtube': round(youtube_subscriber_count / followers * 100)
     }
     return render_template('profile.html', influencer=influencer, follower_percent=follower_percent)
 
@@ -399,20 +551,29 @@ def influencer_posts(id):
 
     return render_template('posts.html', influencer=influencer)
 
+@app.route('/influencer/<int:influencer_id>/viewads/<int:campaign_id>')
+def view_ads(influencer_id, campaign_id):
+    campaign = Campaign.query.get(campaign_id)
+    ads = AdRequest.query.filter_by(campaign_id=campaign_id).all()
+    influencer = Influencer.query.get(influencer_id)
+    return render_template('show-ads-influencer.html', campaign=campaign, ads=ads, influencer=influencer)
 
 @app.route('/negotiatesponsor/<int:nego_id>', methods=['GET', 'POST'])
 def negotiate_sponsor(nego_id):
     negotiation = Negotiation.query.get(nego_id)
     if request.method == 'POST':
         msg = request.form.get('message')
+        if not msg:
+            flash('Message cannot be empty!', 'error')
+            return redirect(url_for('negotiate_sponsor', nego_id=nego_id))
         message = Message(negotiation_id=nego_id, sender='sponsor', content=msg)
         db.session.add(message)
         db.session.commit()
         flash('Message sent successfully!', 'success')
         return redirect(url_for('negotiate_sponsor', nego_id=nego_id))
     messages = Message.query.filter_by(negotiation_id=nego_id).all()
-
-    return render_template('negotiate-sponsor.html',negotiation=negotiation, messages=messages)
+    other_nego_with_same_influencer = Negotiation.query.filter_by(influencer_id=negotiation.influencer_id).all()
+    return render_template('negotiate-sponsor.html',negotiation=negotiation, messages=messages, other_nego_with_same_influencer=other_nego_with_same_influencer)
 
 @app.route('/negotiateinfluencer/<int:nego_id>', methods=['GET', 'POST'])
 def negotiate_influencer(nego_id):
@@ -433,13 +594,12 @@ def final_nego(nego_id):
     negotiation = Negotiation.query.get(nego_id)
     ad_id = negotiation.ad_request_id
     ad_req = AdRequest.query.get(ad_id)
-    new_payment = request.form.get('new_payment')
-    new_terms = request.form.get('new_terms')
     if negotiation.status == 'accepted':
         flash('Negotiation already accepted!', 'error')
         return redirect(url_for('negotiate_sponsor', nego_id=nego_id))
     if request.method == 'POST':
-
+        new_payment = request.form.get('new_payment')
+        new_terms = request.form.get('new_terms')
         negotiation.status = 'accepted'
         negotiation.updated_at = db.func.now()
         ad_req.status = 'ongoing'
@@ -451,7 +611,13 @@ def final_nego(nego_id):
         db.session.commit()
         flash('Negotiation successful!', 'success')
         return redirect(url_for('negotiate_sponsor', nego_id=nego_id))
-    redirect(url_for('negotiate_sponsor', nego_id=nego_id))
+    if negotiation.status == 'requested_by_sponsor' or negotiation.status == 'requested_by_influencer':
+        negotiation.status = 'accepted'
+        negotiation.updated_at = db.func.now()
+        ad_req.status = 'ongoing'
+        db.session.commit()
+        flash('Negotiation successful!', 'success')
+        return redirect(url_for('negotiate_influencer', nego_id=nego_id))
 
 @app.route('/cancelnegotiation/<int:nego_id>')
 def cancel_nego(nego_id):
@@ -465,11 +631,32 @@ def cancel_nego(nego_id):
 @app.route('/withdrawnegotiation/<int:nego_id>')
 def withdraw_nego(nego_id):
     negotiation = Negotiation.query.get(nego_id)
-    negotiation.status = 'rejected'
+    negotiation.status = 'withdrawn'
     negotiation.updated_at = db.func.now()
     db.session.commit()
     flash('Request withdrawn!', 'success')
     return redirect(url_for('negotiate_sponsor', nego_id=nego_id))
+
+@app.route('/cancelinfluencernegotiation/<int:nego_id>')
+def cancel_influencer_nego(nego_id):
+    negotiation = Negotiation.query.get(nego_id)
+    negotiation.status = 'rejected'
+    negotiation.updated_at = db.func.now()
+    db.session.commit()
+    flash('Negotiation cancelled!', 'success')
+    influencer_id = negotiation.influencer_id
+    return redirect(url_for('influencer_dashboard', influencer_id=influencer_id))
+
+@app.route('/withdrawad/<int:nego_id>')
+def withdraw_influencer_nego(nego_id):
+    negotiation = Negotiation.query.get(nego_id)
+    negotiation.status = 'rejected'
+    negotiation.updated_at = db.func.now()
+    db.session.commit()
+    flash('Negotiation cancelled!', 'success')
+    influencer_id = negotiation.influencer_id
+    return redirect(url_for('view_ads', influencer_id=influencer_id, campaign_id=negotiation.ad_request.campaign_id ))
+
 
 
 @app.route('/updateprogress/<int:nego_id>/<int:ad_id>', methods=['GET', 'POST'])
@@ -504,9 +691,6 @@ def payment(negotiation_id):
     negotiation = Negotiation.query.get(negotiation_id)
     return render_template('payment.html', negotiation=negotiation)
 
-import qrcode
-from io import BytesIO
-from PIL import Image, ImageDraw, ImageFont
 
 @app.route('/generate_qr/<int:negotiation_id>', methods=['GET'])
 def generate_qr(negotiation_id):
@@ -548,3 +732,7 @@ def mark_as_paid(negotiation_id):
     # Here you can add your logic to mark the payment as paid in your database.
     # For this example, we'll just return a success message.
     return jsonify({"message": "Payment marked as paid."}), 200
+
+@app.route('/influencer/<int:influencer_id>/logout', methods=['GET'])
+def influencer_logout(influencer_id):
+    return redirect(url_for('home'))

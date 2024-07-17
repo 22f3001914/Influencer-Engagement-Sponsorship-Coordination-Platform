@@ -1,0 +1,36 @@
+{% block title %}{% endblock %}
+{% block active_dashboard %}{% endblock %}
+{% block active_find %}{% endblock %}
+{% block active_stats %}{% endblock %}
+{% block active_logout %}{% endblock %}
+{% block main_header %} {% main_header %}
+
+{% block generate_report %} {% endblock %}      
+
+{% block content %}
+{% endblock %}
+
+/admin/{{admin.id}}/stats
+/admin/{{admin.id}}/profile
+/admin/{{admin.id}}/profilesettings
+/admin/{{admin.id}}/logout
+/admin/{{admin.id}}/generatereport
+/search/admin/{{admin.id}}
+
+
+
+
+
+ {% if admin.profile_picture %}
+                                        <img class="border rounded-circle img-profile"
+                                            src="{{ url_for('static', filename='uploads/' + admin.profile_picture) }}">
+/sponsor/{{sponsor.id}}/dashboard                                      {% else %}
+/sponsor/{{sponsor.id}}/campaign                                      <img class="border rounded-circle img-profile">   {% endif %}
+/sponsor/{{sponsor.id}}/find
+/sponsor/{{sponsor.id}}/stats 
+/sponsor/{{sponsor.id}}/logout   
+/search/sponsor/{{sponsor.id}}  
+/sponsor/{{sponsor.id}}/profile
+/sponsor/{{sponsor}}/profilesettings
+/sponsor/{{sponsor.id}}/logout
+{% block active_campaign %}{% endblock %}

@@ -48,15 +48,23 @@
                                 <div class="mb-3">
                                     <input class="form-control form-control-user rounded-pill" type="number" id="phone" placeholder="Phone number" name="contact_number">
                                 </div>
-                                <div class="mb-3">
-                                    <select class="form-control form-control-user rounded-pill" id="exampleIndustry" name="industry">
-                                        <option value="">Select Industry</option>
-                                        <option value="Technology">Technology</option>
-                                        <option value="Fashion">Fashion</option>
-                                        <option value="Food & Beverage">Food & Beverage</option>
-                                        <option value="Health & Wellness">Health & Wellness</option>
-                                        <option value="Other">Other</option>
-                                    </select>
+                                <div class="d-flex justify-content-between">
+                                    <div class="mb-3 flex-grow-1 me-2">
+                                        <select class="form-control form-control-user rounded-pill" id="exampleIndustry" name="industry">
+                                            <option value="">Select Industry</option>
+                                            <option value="Technology">Technology</option>
+                                            <option value="Fashion">Fashion</option>
+                                            <option value="Food & Beverage">Food & Beverage</option>
+                                            <option value="Health & Wellness">Health & Wellness</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3 flex-grow-1 mx-2">
+                                        <input type="date" class="form-control form-control-user rounded-pill" id="startDate" name="startDate" placeholder="Start Date">
+                                    </div>
+                                    <div class="mb-3 flex-grow-1 ms-2">
+                                        <input type="date" class="form-control form-control-user rounded-pill" id="endDate" name="endDate" placeholder="End Date">
+                                    </div>
                                 </div>
                                 <button class="btn btn-primary btn-user w-100 rounded-pill" type="submit">Register Account</button>
                             </form>
